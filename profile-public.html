@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="lv">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lietotāja profils - Receptes</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <div class="container">
+        <!-- Navigation -->
+        <nav class="navbar">
+            <div class="nav-brand">
+                <a href="index.html">Receptes</a>
+            </div>
+            <div class="nav-search">
+                <input type="text" id="searchInput" placeholder="Meklēt receptes...">
+                <button onclick="mainApp.searchRecipes()"><i class="fas fa-search"></i></button>
+            </div>
+            <div class="nav-actions">
+                <button class="theme-toggle">
+                    <i class="fas fa-moon"></i>
+                </button>
+                <a href="index.html" class="btn btn-outline"><i class="fas fa-home"></i></a>
+            </div>
+        </nav>
+
+        <!-- Public Profile Content -->
+        <main class="main-content">
+            <div class="public-profile">
+                <!-- Profile Header -->
+                <div class="profile-header-public">
+                    <div class="profile-cover">
+                        <img id="userCover" src="images/cover-default.jpg" alt="Cover">
+                    </div>
+                    <div class="profile-info-public">
+                        <div class="profile-avatar-section">
+                            <img id="userAvatar" src="images/avatar.jpg" alt="Avatar" class="profile-avatar-large">
+                            <div class="profile-badges" id="profileBadges"></div>
+                        </div>
+                        <div class="profile-details">
+                            <h1 id="userFullName">Lietotāja vārds</h1>
+                            <p id="userSpecialization" class="user-specialization">Specializācija</p>
+                            <p id="userBio" class="user-bio">Lietotāja apraksts...</p>
+                            
+                            <div class="profile-stats">
+                                <div class="stat">
+                                    <strong id="recipesCount">0</strong>
+                                    <span>Receptes</span>
+                                </div>
+                                <div class="stat">
+                                    <strong id="subscribersCount">0</strong>
+                                    <span>Sekotāji</span>
+                                </div>
+                                <div class="stat">
+                                    <strong id="userRating">0</strong>
+                                    <span>Vērtējums</span>
+                                </div>
+                            </div>
+                            
+                            <div class="profile-actions">
+                                <button id="subscribeBtn" class="subscribe-btn" data-user-id="">
+                                    Sekot
+                                </button>
+                                <button class="btn btn-outline" onclick="mainApp.showMessageModal()">
+                                    <i class="fas fa-envelope"></i> Sūtīt ziņu
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Profile Content -->
+                <div class="profile-content-public">
+                    <div class="profile-tabs">
+                        <button class="tab-btn active" data-tab="recipes">Receptes</button>
+                        <button class="tab-btn" data-tab="collections">Kolekcijas</button>
+                        <button class="tab-btn" data-tab="about">Par autoru</button>
+                    </div>
+
+                    <!-- Recipes Tab -->
+                    <div id="recipesTab" class="tab-content active">
+                        <div class="section-header">
+                            <h3>Autora receptes</h3>
+                            <div class="sort-options">
+                                <select id="sortRecipes" onchange="mainApp.sortUserRecipes()">
+                                    <option value="newest">Jaunākās</option>
+                                    <option value="popular">Populārākās</option>
+                                    <option value="rating">Augstākais vērtējums</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div id="userRecipesGrid" class="recipes-grid">
+                            <!-- Recipes will be loaded here -->
+                        </div>
+                    </div>
+
+                    <!-- Collections Tab -->
+                    <div id="collectionsTab" class="tab-content">
+                        <div class="section-header">
+                            <h3>Publiskās kolekcijas</h3>
+                        </div>
+                        <div id="userCollections" class="collections-grid">
+                            <!-- Collections will be loaded here -->
+                        </div>
+                    </div>
+
+                    <!-- About Tab -->
+                    <div id="aboutTab" class="tab-content">
+                        <div class="about-section">
+                            <h3>Par autoru</h3>
+                            <div id="userAboutContent" class="about-content">
+                                <!-- About content will be loaded here -->
+                            </div>
+                            
+                            <div class="achievements-section">
+                                <h4>Sasniegumi</h4>
+                                <div id="userAchievements" class="achievements-grid">
+                                    <!-- Achievements will be loaded here -->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Message Modal -->
+    <div id="messageModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Sūtīt ziņu</h3>
+                <button class="modal-close" onclick="mainApp.closeMessageModal()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="messageForm">
+                    <div class="form-group">
+                        <label for="messageSubject">Tēma</label>
+                        <input type="text" id="messageSubject" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="messageText">Ziņa</label>
+                        <textarea id="messageText" rows="5" required></textarea>
+                    </div>
+                    <div class="form-actions">
+                        <button type="button" class="btn btn-outline" onclick="mainApp.closeMessageModal()">Atcelt</button>
+                        <button type="submit" class="btn btn-primary">Sūtīt</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/api-client.js"></script>
+    <script src="js/main.js"></script>
+    <script src="js/profile-public.js"></script>
+</body>
+</html>

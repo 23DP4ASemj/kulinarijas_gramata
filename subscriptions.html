@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="lv">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Abonementi - Receptes</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <div class="container">
+        <!-- Navigation -->
+        <nav class="navbar">
+            <div class="nav-brand">
+                <a href="index.html">Receptes</a>
+            </div>
+            <div class="nav-search">
+                <input type="text" id="userSearchInput" placeholder="Meklēt lietotājus...">
+            </div>
+            <div class="nav-actions">
+                <button class="theme-toggle">
+                    <i class="fas fa-moon"></i>
+                </button>
+                <a href="index.html" class="btn btn-outline"><i class="fas fa-home"></i></a>
+            </div>
+        </nav>
+
+        <!-- Subscriptions Content -->
+        <main class="main-content">
+            <div class="subscriptions-page">
+                <div class="page-header">
+                    <h1><i class="fas fa-users"></i> Mani abonementi</h1>
+                </div>
+
+                <!-- Tabs -->
+                <div class="subscriptions-tabs">
+                    <button class="tab-btn active" data-tab="following">Seko</button>
+                    <button class="tab-btn" data-tab="followers">Sekotāji</button>
+                    <button class="tab-btn" data-tab="suggestions">Ieteicamie</button>
+                </div>
+
+                <!-- Following Tab -->
+                <div id="followingTab" class="tab-content active">
+                    <div class="users-grid" id="followingList">
+                        <!-- Following users will be loaded here -->
+                    </div>
+                    <div id="emptyFollowing" class="empty-state" style="display: none;">
+                        <i class="fas fa-user-plus fa-3x"></i>
+                        <h3>Vēl nevienam nesekojat</h3>
+                        <p>Sāciet sekot citiem lietotājiem, lai redzētu viņu receptes savā lentē</p>
+                        <a href="index.html" class="btn btn-primary">Atklāt autorus</a>
+                    </div>
+                </div>
+
+                <!-- Followers Tab -->
+                <div id="followersTab" class="tab-content">
+                    <div class="users-grid" id="followersList">
+                        <!-- Followers will be loaded here -->
+                    </div>
+                    <div id="emptyFollowers" class="empty-state" style="display: none;">
+                        <i class="fas fa-users fa-3x"></i>
+                        <h3>Vēl nav sekotāju</h3>
+                        <p>Publicējiet receptes un aktivizējieties, lai piesaistītu sekotājus</p>
+                    </div>
+                </div>
+
+                <!-- Suggestions Tab -->
+                <div id="suggestionsTab" class="tab-content">
+                    <div class="users-grid" id="suggestionsList">
+                        <!-- Suggested users will be loaded here -->
+                    </div>
+                </div>
+
+                <!-- Search Results -->
+                <div id="userSearchResults" class="search-results" style="display: none;">
+                    <h3>Meklēšanas rezultāti</h3>
+                    <div class="users-grid" id="searchResultsList">
+                        <!-- Search results will be loaded here -->
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script src="js/api-client.js"></script>
+    <script src="js/main.js"></script>
+    <script src="js/subscriptions.js"></script>
+</body>
+</html>

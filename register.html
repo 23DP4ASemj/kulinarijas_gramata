@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="lv">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reģistrācija - Kulinārijas grāmata</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+</head>
+<body class="light-theme">
+    <header>
+        <div class="container">
+            <div class="header-content">
+                <div class="logo">
+                    <h1><i class="fas fa-utensils"></i> Kulinārijas grāmata</h1>
+                </div>
+                <nav class="navigation">
+                    <button class="mobile-menu-close">&times;</button>
+                    <ul>
+                        <li><a href="index.html" class="active"><i class="fas fa-home"></i> Galvenā</a></li>
+                        <li><a href="add-recipe.html" class="protected"><i class="fas fa-plus-circle"></i> Pievienot recepti</a></li>
+                        <li><a href="profile.html" class="protected"><i class="fas fa-user"></i> Profils</a></li>
+                        <li><a href="blog.html"><i class="fas fa-blog"></i> Blogs</a></li>
+                        <li class="auth-links">
+                            <!-- Auth links will be populated by auth.js -->
+                        </li>
+                    </ul>
+                </nav>
+            </div>
+        </div>
+    </header>
+
+    <main class="container">
+        <div class="auth-container">
+            <div class="auth-card">
+                <h2><i class="fas fa-user-plus"></i> Reģistrācija</h2>
+                
+                <form id="registerForm" class="auth-form">
+                    <div class="form-group">
+                        <label for="registerFullName">Pilns vārds:</label>
+                        <input type="text" id="registerFullName" name="fullName" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="registerUsername">Lietotājvārds:</label>
+                        <input type="text" id="registerUsername" name="username" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="registerEmail">E-pasts:</label>
+                        <input type="email" id="registerEmail" name="email" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="registerPassword">Parole:</label>
+                        <input type="password" id="registerPassword" name="password" required>
+                    </div>
+                    
+                    <button type="submit" class="btn btn-primary btn-full">
+                        <i class="fas fa-user-plus"></i> Reģistrēties
+                    </button>
+                </form>
+                
+                <div class="auth-links-bottom">
+                    <p>Jau esi reģistrējies? <a href="login.html">Pieteikties</a></p>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script src="js/api.js"></script>
+    <script src="js/auth.js"></script>
+</body>
+</html>
