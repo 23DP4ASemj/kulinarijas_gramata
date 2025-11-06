@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="lv">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lietotāja profils - Receptes</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body class="light-theme">
+    <header>
+        <div class="container">
+            <div class="header-content">
+                <div class="logo-and-search">
+                    <div class="logo">
+                        <h1>
+                            <a href="index.html">
+                                <i class="fas fa-utensils"></i> Kulinārijas grāmata
+                            </a>
+                        </h1>
+                    </div>
+                    <div class="header-controls">
+                        <div class="search-box">
+                            <input type="text" id="searchInput" placeholder="Meklēt receptes vai autorus...">
+                            <button type="button" onclick="mainApp.searchRecipes()"><i class="fas fa-search"></i></button>
+                        </div>
+                        <button class="theme-toggle" type="button" aria-label="Pārslēgt tēmu">
+                            <i class="fas fa-moon"></i>
+                        </button>
+                    </div>
+                </div>
+                <button class="mobile-menu-toggle" type="button" aria-label="Pārslēgt izvēlni">
+                    <i class="fas fa-bars"></i>
+                </button>
+                <nav class="navigation" aria-label="Galvenā navigācija">
+                    <ul>
+                            <li><a href="index.html"><i class="fas fa-home"></i> Galvenā</a></li>
+                            <li><a href="collections.html" class="protected"><i class="fas fa-folder-open"></i> Kolekcijas</a></li>
+                            <li><a href="subscriptions.html" class="protected"><i class="fas fa-users"></i> Abonementi</a></li>
+                            <li><a href="blog.html"><i class="fas fa-blog"></i> Blogs</a></li>
+                            <li><a href="add-recipe.html" class="protected"><i class="fas fa-plus-circle"></i> Pievienot recepti</a></li>
+                            <li><a href="profile.html" class="protected active"><i class="fas fa-user"></i> Profils</a></li>
+                            <li class="auth-links">
+                                <!-- Auth links will be populated by auth.js -->
+                            </li>
+                    </ul>
+                </nav>
+            </div>
+        </div>
+    </header>
+
+    <main class="container profile-page public-profile-page">
+        <!-- Public Profile Content -->
+            <div class="public-profile">
+                <!-- Profile Header -->
+                <div class="profile-header-public card">
+                    <div class="profile-cover">
+                        <img id="userCover" src="images/spaghetti.jpg" alt="Cover">
+                    </div>
+                    <div class="profile-info-public">
+                        <div class="profile-avatar-section">
+                            <img id="userAvatar" src="images/avatar.jpg" alt="Avatar" class="profile-avatar-large">
+                            <div class="profile-badges" id="profileBadges"></div>
+                        </div>
+                        <div class="profile-details">
+                            <h1 id="userFullName">Lietotāja vārds</h1>
+                            <p id="userSpecialization" class="user-specialization">Specializācija</p>
+                            <p id="userBio" class="user-bio">Lietotāja apraksts...</p>
+                            
+                            <div class="profile-stats">
+                                <div class="stat">
+                                    <strong id="recipesCount">0</strong>
+                                    <span>Receptes</span>
+                                </div>
+                                <div class="stat">
+                                    <strong id="subscribersCount" data-subscribers-for="">0</strong>
+                                    <span>Sekotāji</span>
+                                </div>
+                                <div class="stat">
+                                    <strong id="userRating">0</strong>
+                                    <span>Vērtējums</span>
+                                </div>
+                            </div>
+                            
+                            <div class="profile-actions">
+                                <button id="subscribeBtn" class="subscribe-btn" data-user-id="">
+                                    Sekot
+                                </button>
+                                <button class="btn btn-outline" type="button" onclick="publicProfile.showMessageModal()">
+                                    <i class="fas fa-envelope"></i> Sūtīt ziņu
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Profile Content -->
+                <div class="profile-content-public card">
+                    <div class="profile-tabs">
+                        <button class="tab-btn active" data-tab="recipes">Receptes</button>
+                        <button class="tab-btn" data-tab="collections">Kolekcijas</button>
+                        <button class="tab-btn" data-tab="about">Par autoru</button>
+                    </div>
+
+                    <!-- Recipes Tab -->
+                    <div id="recipesTab" class="tab-content active">
+                        <div class="section-header">
+                            <h3>Autora receptes</h3>
+                            <div class="sort-options">
+                                <select id="sortRecipes" onchange="publicProfile.sortUserRecipes()">
+                                    <option value="newest">Jaunākās</option>
+                                    <option value="popular">Populārākās</option>
+                                    <option value="rating">Augstākais vērtējums</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div id="userRecipesGrid" class="recipes-grid">
+                            <!-- Recipes will be loaded here -->
+                        </div>
+                    </div>
+
+                    <!-- Collections Tab -->
+                    <div id="collectionsTab" class="tab-content">
+                        <div class="section-header">
+                            <h3>Publiskās kolekcijas</h3>
+                        </div>
+                        <div id="userCollections" class="collections-grid">
+                            <!-- Collections will be loaded here -->
+                        </div>
+                    </div>
+
+                    <!-- About Tab -->
+                    <div id="aboutTab" class="tab-content">
+                        <div class="about-section">
+                            <h3>Par autoru</h3>
+                            <div id="userAboutContent" class="about-content">
+                                <!-- About content will be loaded here -->
+                            </div>
+                            
+                            <div class="achievements-section">
+                                <h4>Sasniegumi</h4>
+                                <div id="userAchievements" class="achievements-grid">
+                                    <!-- Achievements will be loaded here -->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+    <!-- Message Modal -->
+    <div id="messageModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Sūtīt ziņu</h3>
+                <button class="modal-close" onclick="publicProfile.closeMessageModal()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="messageForm">
+                    <div class="form-group">
+                        <label for="messageSubject">Tēma</label>
+                        <input type="text" id="messageSubject" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="messageText">Ziņa</label>
+                        <textarea id="messageText" rows="5" required></textarea>
+                    </div>
+                    <div class="form-actions">
+                        <button type="button" class="btn btn-outline" onclick="publicProfile.closeMessageModal()">Atcelt</button>
+                        <button type="submit" class="btn btn-primary">Sūtīt</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script src="api.js"></script>
+    <script src="auth.js"></script>
+    <script src="theme.js"></script>
+    <script src="subscription-buttons.js"></script>
+    <script src="main.js"></script>
+    <script src="profile-public.js"></script>
+</body>
+</html>

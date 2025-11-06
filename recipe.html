@@ -1,0 +1,662 @@
+<!DOCTYPE html>
+<html lang="lv">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Recepte - Kulinārijas grāmata</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body class="light-theme">
+    <header>
+        <div class="container">
+            <div class="header-content">
+                <div class="logo-and-search">
+                    <div class="logo">
+                        <h1>
+                            <a href="index.html">
+                                <i class="fas fa-utensils"></i> Kulinārijas grāmata
+                            </a>
+                        </h1>
+                    </div>
+                    <div class="header-controls">
+                        <div class="search-box">
+                            <input type="text" id="searchInput" placeholder="Meklēt receptes vai autorus...">
+                            <button type="button" onclick="mainApp.searchRecipes()"><i class="fas fa-search"></i></button>
+                        </div>
+                        <button class="theme-toggle" type="button" aria-label="Pārslēgt tēmu">
+                            <i class="fas fa-moon"></i>
+                        </button>
+                    </div>
+                </div>
+                <button class="mobile-menu-toggle" type="button" aria-label="Pārslēgt izvēlni">
+                    <i class="fas fa-bars"></i>
+                </button>
+                <nav class="navigation" aria-label="Galvenā navigācija">
+                    <ul>
+                            <li><a href="index.html"><i class="fas fa-home"></i> Galvenā</a></li>
+                            <li><a href="collections.html" class="protected"><i class="fas fa-folder-open"></i> Kolekcijas</a></li>
+                            <li><a href="subscriptions.html" class="protected"><i class="fas fa-users"></i> Abonementi</a></li>
+                            <li><a href="blog.html"><i class="fas fa-blog"></i> Blogs</a></li>
+                            <li><a href="add-recipe.html" class="protected"><i class="fas fa-plus-circle"></i> Pievienot recepti</a></li>
+                            <li><a href="profile.html" class="protected"><i class="fas fa-user"></i> Profils</a></li>
+                            <li class="auth-links">
+                                <!-- Auth links will be populated by auth.js -->
+                            </li>
+                    </ul>
+                </nav>
+            </div>
+        </div>
+    </header>
+
+<main class="container">
+        <article class="recipe-detail card" id="recipeContainer">
+            <div class="loading">Ielādē recepti...</div>
+        </article>
+    </main>
+
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>Kulinārijas grāmata</h3>
+                    <p>Labākās receptes no Latvijas un visas pasaules.</p>
+                </div>
+                <div class="footer-section">
+                    <h3>Navigācija</h3>
+                    <ul>
+                        <li><a href="index.html">Galvenā</a></li>
+                        <li><a href="add-recipe.html">Pievienot recepti</a></li>
+                        <li><a href="profile.html">Profils</a></li>
+                        <li><a href="blog.html">Blogs</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2024 Kulinārijas grāmata. Visas tiesības aizsargātas.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="api.js"></script>
+    <script src="auth.js"></script>
+    <script src="theme.js"></script>
+    <script src="main.js"></script>
+    <script>
+        class RecipePage {
+            constructor() {
+                this.recipeId = this.getRecipeIdFromUrl();
+                this.recipe = null;
+                this.init();
+            }
+
+            getRecipeIdFromUrl() {
+                const urlParams = new URLSearchParams(window.location.search);
+                const id = urlParams.get('id');
+                console.log('Recipe ID from URL:', id);
+                return id;
+            }
+
+            async init() {
+                console.log('Initializing recipe page with ID:', this.recipeId);
+                
+                if (!this.recipeId) {
+                    this.showError('Receptes ID nav norādīts');
+                    return;
+                }
+
+                await this.loadRecipe();
+                this.setupEventListeners();
+            }
+
+            async loadRecipe() {
+                try {
+                    const container = document.getElementById('recipeContainer');
+                    container.innerHTML = '<div class="loading">Ielādē recepti...</div>';
+                    
+                    this.recipe = await window.apiClient.getRecipe(this.recipeId);
+                    console.log('Recipe loaded:', this.recipe);
+                    this.renderRecipe();
+                } catch (error) {
+                    console.error('Error loading recipe:', error);
+                    this.showError('Recepte netika atrasta');
+                }
+            }
+
+            renderRecipe() {
+                const container = document.getElementById('recipeContainer');
+                if (!this.recipe) return;
+
+                const r = this.recipe;
+
+                container.innerHTML = `
+                    <nav class="breadcrumbs">
+                        <a href="index.html">Galvenā</a> > 
+                        <a href="index.html?category=${r.category_id}">${r.category_name}</a> > 
+                        <span>${r.title}</span>
+                    </nav>
+
+                    <div class="recipe-hero">
+                        <div class="recipe-image-large">
+                            <img src="${r.image_url || 'images/cake.jpg'}" alt="${r.title}" onerror="this.src='images/cake.jpg'">
+                            <div class="recipe-actions">
+                                <button class="btn btn-primary" id="favoriteBtn">
+                                    <i class="far fa-heart"></i> Pievienot izlūkiem
+                                </button>
+                                <button class="btn btn-outline" onclick="window.recipePage.shareRecipe()">
+                                    <i class="fas fa-share"></i> Kopīgot
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <div class="recipe-header">
+                            <h1>${r.title}</h1>
+                            <p class="recipe-description">${r.description || 'Nav apraksta'}</p>
+                            
+                            <div class="recipe-meta-info">
+                                <span class="author"><i class="fas fa-user"></i> ${r.author_name}</span>
+                                <span class="cooking-time"><i class="far fa-clock"></i> ${r.prep_time + (r.cook_time || 0)} minūtes</span>
+                                <span class="difficulty"><i class="fas fa-signal"></i> ${this.getDifficultyText(r.difficulty)}</span>
+                                <span class="portions"><i class="fas fa-users"></i> ${r.portions} porcijas</span>
+                            </div>
+                            
+                            <div class="detailed-rating">
+                                <div class="overall-rating">
+                                    <div class="rating-value">${r.average_rating || '0'}</div>
+                                    <div class="stars">${this.generateStars(r.average_rating)}</div>
+                                    <span class="rating-count">(${r.ratings_count || 0} vērtējumi)</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="recipe-content">
+                        <div class="ingredients-section">
+                            <h2><i class="fas fa-shopping-basket"></i> Sastāvdaļas</h2>
+                            <ul class="ingredients-list">
+                                ${this.renderIngredients(r.ingredients)}
+                            </ul>
+                        </div>
+
+                        <div class="instructions-section">
+                            <h2><i class="fas fa-mortar-pestle"></i> Pagatavošanas instrukcijas</h2>
+                            <div class="instructions-steps">
+                                ${this.renderInstructions(r.instructions)}
+                            </div>
+                        </div>
+                    </div>
+
+                    <section class="rating-section card protected">
+                        <h3><i class="fas fa-star"></i> Novērtējiet recepti</h3>
+                        <form id="ratingForm" class="rating-form">
+                            <div class="rating-categories">
+                                <div class="rating-category-input">
+                                    <label>Kopējais iespaids</label>
+                                    <div class="star-rating" data-category="overall">
+                                        <span data-value="1">★</span>
+                                        <span data-value="2">★</span>
+                                        <span data-value="3">★</span>
+                                        <span data-value="4">★</span>
+                                        <span data-value="5">★</span>
+                                    </div>
+                                </div>
+                                <div class="rating-category-input">
+                                    <label>Garša</label>
+                                    <div class="star-rating" data-category="taste">
+                                        <span data-value="1">★</span>
+                                        <span data-value="2">★</span>
+                                        <span data-value="3">★</span>
+                                        <span data-value="4">★</span>
+                                        <span data-value="5">★</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="ratingComment">Komentārs (neobligāts)</label>
+                                <textarea id="ratingComment" placeholder="Kā jums patika recepte? Vai veicāt izmaiņas?" rows="3"></textarea>
+                            </div>
+                            <button type="submit" class="btn btn-primary">Iesniegt vērtējumu</button>
+                        </form>
+                    </section>
+
+                    <section class="comments-section">
+                        <h2><i class="far fa-comments"></i> Komentāri (<span id="commentsCount">${r.comments ? r.comments.length : 0}</span>)</h2>
+                        
+                        <div class="add-comment card protected">
+                            <h3>Pievienot komentāru</h3>
+                            <form id="commentForm">
+                                <div class="form-group">
+                                    <textarea id="commentText" placeholder="Kā jums patika recepte? Vai veicāt kādas izmaiņas?" rows="4" required></textarea>
+                                </div>
+                                <button type="submit" class="btn btn-primary">Publicēt komentāru</button>
+                            </form>
+                        </div>
+
+                        <div class="comments-list" id="commentsList">
+                            ${this.renderComments(r.comments || [])}
+                        </div>
+                    </section>
+                `;
+
+                this.setupRatingStars();
+                this.updateFavoriteButton();
+            }
+
+            renderIngredients(ingredients) {
+                if (!ingredients || ingredients.length === 0) {
+                    return '<li>Nav norādītu sastāvdaļu</li>';
+                }
+
+                return ingredients.map((ing, index) => `
+                    <li>
+                        <input type="checkbox" id="ing${index}">
+                        <label for="ing${index}">${ing.name || ing}</label>
+                    </li>
+                `).join('');
+            }
+
+            renderInstructions(instructions) {
+                if (!instructions || instructions.length === 0) {
+                    return '<p>Nav norādītu instrukciju</p>';
+                }
+
+                return instructions.map((inst, index) => {
+                    const stepNumber = inst.step_number || index + 1;
+                    const instructionText = inst.instruction_text || inst;
+                    
+                    return `
+                        <div class="instruction-step">
+                            <div class="step-number">${stepNumber}</div>
+                            <div class="step-content">
+                                <p>${instructionText}</p>
+                            </div>
+                        </div>
+                    `;
+                }).join('');
+            }
+
+            renderComments(comments) {
+                if (!comments || comments.length === 0) {
+                    return '<p class="no-comments">Vēl nav komentāru. Esi pirmais!</p>';
+                }
+
+                return comments.map(comment => `
+                    <div class="comment card">
+                        <div class="comment-header">
+                            <div class="comment-author">
+                                <img src="${comment.avatar_url || 'images/avatar.jpg'}" alt="${comment.full_name}" class="comment-avatar">
+                                <div>
+                                    <strong>${comment.full_name}</strong>
+                                    <span class="comment-date">${new Date(comment.created_at).toLocaleDateString('lv-LV')}</span>
+                                </div>
+                            </div>
+                        </div>
+                        <p class="comment-text">${comment.comment_text}</p>
+                    </div>
+                `).join('');
+            }
+
+            getDifficultyText(difficulty) {
+                const difficulties = {
+                    'easy': 'Viegli',
+                    'medium': 'Vidēji', 
+                    'hard': 'Grūti'
+                };
+                return difficulties[difficulty] || difficulty;
+            }
+
+            generateStars(rating) {
+                if (!rating) return '<i class="far fa-star"></i>'.repeat(5);
+                
+                const fullStars = Math.floor(rating);
+                const halfStar = rating % 1 >= 0.5;
+                let stars = '';
+
+                for (let i = 1; i <= 5; i++) {
+                    if (i <= fullStars) {
+                        stars += '<i class="fas fa-star"></i>';
+                    } else if (i === fullStars + 1 && halfStar) {
+                        stars += '<i class="fas fa-star-half-alt"></i>';
+                    } else {
+                        stars += '<i class="far fa-star"></i>';
+                    }
+                }
+
+                return stars;
+            }
+
+            setupEventListeners() {
+                // Rating form
+                const ratingForm = document.getElementById('ratingForm');
+                if (ratingForm) {
+                    ratingForm.addEventListener('submit', (e) => this.handleRatingSubmit(e));
+                }
+
+                // Comment form
+                const commentForm = document.getElementById('commentForm');
+                if (commentForm) {
+                    commentForm.addEventListener('submit', (e) => this.handleCommentSubmit(e));
+                }
+
+                // Favorite button
+                const favoriteBtn = document.getElementById('favoriteBtn');
+                if (favoriteBtn) {
+                    favoriteBtn.addEventListener('click', () => this.toggleFavorite());
+                }
+            }
+
+            setupRatingStars() {
+                document.querySelectorAll('.star-rating').forEach(rating => {
+                    const stars = rating.querySelectorAll('span');
+                    stars.forEach((star, index) => {
+                        star.addEventListener('click', () => {
+                            this.setRating(rating, index + 1);
+                        });
+                        
+                        star.addEventListener('mouseover', () => {
+                            this.highlightStars(stars, index + 1);
+                        });
+                    });
+                    
+                    rating.addEventListener('mouseleave', () => {
+                        this.resetStars(rating);
+                    });
+                });
+            }
+
+            setRating(ratingElement, value) {
+                const stars = ratingElement.querySelectorAll('span');
+                stars.forEach((star, index) => {
+                    star.style.color = index < value ? '#ffc107' : '#ccc';
+                });
+                ratingElement.dataset.rating = value;
+            }
+
+            highlightStars(stars, count) {
+                stars.forEach((star, index) => {
+                    star.style.color = index < count ? '#ffc107' : '#ccc';
+                });
+            }
+
+            resetStars(ratingElement) {
+                const currentRating = ratingElement.dataset.rating;
+                const stars = ratingElement.querySelectorAll('span');
+                stars.forEach((star, index) => {
+                    star.style.color = currentRating && index < currentRating ? '#ffc107' : '#ccc';
+                });
+            }
+
+            async handleRatingSubmit(e) {
+                e.preventDefault();
+                
+                if (!window.apiClient.isAuthenticated()) {
+                    this.showNotification('Lai novērtētu, jāpieslēdzas', 'error');
+                    return;
+                }
+
+                const overall = document.querySelector('[data-category="overall"]')?.dataset.rating;
+                const taste = document.querySelector('[data-category="taste"]')?.dataset.rating;
+                const comment = document.getElementById('ratingComment').value;
+
+                if (!overall) {
+                    this.showNotification('Lūdzu, novērtējiet recepti', 'error');
+                    return;
+                }
+
+                try {
+                    const ratingData = {
+                        overall: parseInt(overall),
+                        taste: parseInt(taste || overall),
+                        comment: comment
+                    };
+                    
+                    await window.apiClient.addRating(this.recipeId, ratingData);
+                    this.showNotification('Paldies par jūsu vērtējumu!', 'success');
+                    
+                    // Обновляем рейтинг на странице
+                    await this.updateRecipeRating();
+                    
+                    // Обновляем топ на главной странице
+                    if (window.mainApp && window.mainApp.loadTopData) {
+                        await window.mainApp.loadTopData();
+                    }
+                    
+                    // Сбрасываем форму
+                    document.querySelectorAll('.star-rating').forEach(rating => {
+                        const stars = rating.querySelectorAll('span');
+                        stars.forEach(star => {
+                            star.style.color = '#ccc';
+                        });
+                        rating.dataset.rating = '';
+                    });
+                    document.getElementById('ratingComment').value = '';
+                    
+                } catch (error) {
+                    this.showNotification('Kļūda nosūtot vērtējumu: ' + error.message, 'error');
+                }
+            }
+
+            async handleCommentSubmit(e) {
+                e.preventDefault();
+                
+                if (!window.apiClient.isAuthenticated()) {
+                    this.showNotification('Lai komentētu, jāpieslēdzas', 'error');
+                    return;
+                }
+
+                const commentText = document.getElementById('commentText').value.trim();
+
+                if (!commentText) {
+                    this.showNotification('Lūdzu, ierakstiet komentāru', 'error');
+                    return;
+                }
+
+                try {
+                    await window.apiClient.addComment(this.recipeId, commentText);
+                    this.showNotification('Komentārs pievienots!', 'success');
+                    
+                    // Обновляем комментарии на странице
+                    await this.loadComments();
+                    
+                    e.target.reset();
+                    
+                } catch (error) {
+                    this.showNotification('Kļūda pievienojot komentāru: ' + error.message, 'error');
+                }
+            }
+
+            async loadComments() {
+                try {
+                    const recipe = await window.apiClient.getRecipe(this.recipeId);
+                    const commentsList = document.getElementById('commentsList');
+                    const commentsCount = document.getElementById('commentsCount');
+                    
+                    if (commentsList) {
+                        commentsList.innerHTML = this.renderComments(recipe.comments || []);
+                    }
+                    if (commentsCount) {
+                        commentsCount.textContent = recipe.comments ? recipe.comments.length : 0;
+                    }
+                } catch (error) {
+                    console.error('Error loading comments:', error);
+                }
+            }
+
+            async updateRecipeRating() {
+                try {
+                    const recipe = await window.apiClient.getRecipe(this.recipeId);
+                    
+                    // Обновляем отображение рейтинга
+                    const ratingValue = document.querySelector('.rating-value');
+                    const stars = document.querySelector('.overall-rating .stars');
+                    const ratingCount = document.querySelector('.rating-count');
+                    
+                    if (ratingValue) {
+                        ratingValue.textContent = recipe.average_rating || '0';
+                    }
+                    if (stars) {
+                        stars.innerHTML = this.generateStars(recipe.average_rating);
+                    }
+                    if (ratingCount) {
+                        ratingCount.textContent = `(${recipe.ratings_count || 0} vērtējumi)`;
+                    }
+                } catch (error) {
+                    console.error('Error updating rating:', error);
+                }
+            }
+
+            async toggleFavorite() {
+                if (!window.apiClient.isAuthenticated()) {
+                    this.showNotification('Lai pievienotu izlūkiem, jāpieslēdzas', 'error');
+                    return;
+                }
+
+                try {
+                    const result = await window.apiClient.toggleFavorite(this.recipeId);
+                    this.updateFavoriteButton();
+                    this.showNotification(result.message, 'success');
+                    
+                    // Обновляем топ на главной странице
+                    if (window.mainApp && window.mainApp.loadTopData) {
+                        await window.mainApp.loadTopData();
+                    }
+                } catch (error) {
+                    this.showNotification('Kļūda pievienojot izlūkiem: ' + error.message, 'error');
+                }
+            }
+
+            async updateFavoriteButton() {
+                try {
+                    const favorites = JSON.parse(localStorage.getItem('favorites') || '[]');
+                    const user = window.apiClient.getCurrentUser();
+                    const favoriteBtn = document.getElementById('favoriteBtn');
+                    
+                    if (favoriteBtn && user) {
+                        const isFavorited = favorites.some(f => 
+                            f.recipe_id === parseInt(this.recipeId) && f.user_id === user.id
+                        );
+                        
+                        if (isFavorited) {
+                            favoriteBtn.innerHTML = '<i class="fas fa-heart"></i> Noņemt no izlūkiem';
+                            favoriteBtn.classList.add('favorited');
+                        } else {
+                            favoriteBtn.innerHTML = '<i class="far fa-heart"></i> Pievienot izlūkiem';
+                            favoriteBtn.classList.remove('favorited');
+                        }
+                    }
+                } catch (error) {
+                    console.error('Error updating favorite button:', error);
+                }
+            }
+
+            shareRecipe() {
+                if (navigator.share) {
+                    navigator.share({
+                        title: this.recipe.title,
+                        text: this.recipe.description,
+                        url: window.location.href
+                    });
+                } else {
+                    navigator.clipboard.writeText(window.location.href);
+                    this.showNotification('Saite kopēta starpliktuvē!', 'success');
+                }
+            }
+
+            showError(message) {
+                const container = document.getElementById('recipeContainer');
+                container.innerHTML = `
+                    <div class="error-message">
+                        <h2>${message}</h2>
+                        <p>Atgriezieties uz <a href="index.html">galveno lapu</a>.</p>
+                    </div>
+                `;
+            }
+
+            showNotification(message, type = 'info') {
+                if (window.authManager) {
+                    window.authManager.showNotification(message, type);
+                } else {
+                    // Простой fallback
+                    alert(message);
+                }
+            }
+        }
+
+        // Initialize recipe page
+        document.addEventListener('DOMContentLoaded', () => {
+            console.log('DOM loaded, initializing recipe page...');
+            window.recipePage = new RecipePage();
+        });
+    </script>
+
+    <style>
+        .favorited {
+            background: var(--error-color) !important;
+        }
+
+        .rating-categories {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            margin-bottom: 1.5rem;
+        }
+
+        @media (max-width: 768px) {
+            .rating-categories {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .rating-category-input label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+            color: var(--text-color);
+        }
+
+        .star-rating {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .star-rating span {
+            font-size: 2rem;
+            color: #ccc;
+            cursor: pointer;
+            transition: all 0.3s;
+            user-select: none;
+        }
+
+        .star-rating span:hover {
+            color: #ffc107;
+            transform: scale(1.1);
+        }
+
+        .add-comment {
+            margin-bottom: 2rem;
+        }
+
+        .comments-list {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .comment {
+            animation: slideIn 0.3s ease;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+    </style>
+</body>
+</html>

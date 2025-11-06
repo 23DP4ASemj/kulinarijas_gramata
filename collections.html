@@ -1,0 +1,172 @@
+﻿<!DOCTYPE html>
+<html lang="lv">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manas kolekcijas - Receptes</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body class="light-theme">
+    <header>
+        <div class="container">
+            <div class="header-content">
+                <div class="logo-and-search">
+                    <div class="logo">
+                        <h1>
+                            <a href="index.html">
+                                <i class="fas fa-utensils"></i> Kulinarijas gramata
+                            </a>
+                        </h1>
+                    </div>
+                    <div class="header-controls">
+                        <div class="search-box">
+                            <input type="text" id="searchInput" placeholder="Meklēt receptes vai autorus...">
+                            <button type="button" id="searchButton"><i class="fas fa-search"></i></button>
+                        </div>
+                        <button class="theme-toggle" type="button" aria-label="Pārslēgt tēmu">
+                            <i class="fas fa-moon"></i>
+                        </button>
+                    </div>
+                </div>
+                <button class="mobile-menu-toggle" type="button" aria-label="Pārslēgt izvēlni">
+                    <i class="fas fa-bars"></i>
+                </button>
+                <nav class="navigation" aria-label="Galvenā navigācija">
+                    <ul>
+                            <li><a href="index.html"><i class="fas fa-home"></i> Galvenā</a></li>
+                            <li><a href="collections.html" class="protected active"><i class="fas fa-folder-open"></i> Kolekcijas</a></li>
+                            <li><a href="subscriptions.html" class="protected"><i class="fas fa-users"></i> Abonementi</a></li>
+                            <li><a href="blog.html"><i class="fas fa-blog"></i> Blogs</a></li>
+                            <li><a href="add-recipe.html" class="protected"><i class="fas fa-plus-circle"></i> Pievienot recepti</a></li>
+                            <li><a href="profile.html" class="protected"><i class="fas fa-user"></i> Profils</a></li>
+                            <li class="auth-links">
+                                <!-- Auth links will be populated by auth.js -->
+                            </li>
+                    </ul>
+                </nav>
+            </div>
+        </div>
+    </header>
+
+    <main class="collections-layout">
+        <section class="collections-hero card">
+            <div class="collections-hero__content">
+                <div>
+                    <h1><i class="fas fa-folder-open"></i> Manas kolekcijas</h1>
+                    <p>Sakārto receptes tematiskās mapēs, izveido sezonālus sarakstus un dalies ar iedvesmu.</p>
+                </div>
+                <button class="btn btn-primary" id="newCollectionBtn">
+                    <i class="fas fa-plus"></i> Jauna kolekcija
+                </button>
+            </div>
+            <div class="collections-hero__stats" id="collectionsStats">
+                <div class="stat">
+                    <span class="label">Kolekcijas</span>
+                    <strong id="collectionsCount">0</strong>
+                </div>
+                <div class="stat">
+                    <span class="label">Publiskās</span>
+                    <strong id="collectionsPublic">0</strong>
+                </div>
+                <div class="stat">
+                    <span class="label">Receptes kopā</span>
+                    <strong id="collectionsRecipes">0</strong>
+                </div>
+            </div>
+        </section>
+
+        <section class="collections-toolbar card">
+            <div class="collections-toolbar__search">
+                <label for="collectionSearchInput" class="visually-hidden">Meklēt kolekcijas</label>
+                <input type="search" id="collectionSearchInput" placeholder="Meklēt kolekciju pēc nosaukuma vai tēmas...">
+                <i class="fas fa-search"></i>
+            </div>
+            <div class="collections-toolbar__filters">
+                <button class="chip active" data-filter="all">Visas</button>
+                <button class="chip" data-filter="public">Publiskās</button>
+                <button class="chip" data-filter="private">Privātās</button>
+                <button class="chip" data-filter="recent">Jaunākās</button>
+            </div>
+        </section>
+
+        <section class="collections-shell card">
+            <div id="collectionsContainer" class="collections-grid"></div>
+            <div id="emptyCollections" class="empty-state" style="display: none;">
+                <i class="fas fa-folder-open fa-3x"></i>
+                <h3>Vēl nav kolekciju</h3>
+                <p>Izveido savu pirmo tēmu un pievieno receptes ar vienu klikšķi.</p>
+                <button class="btn btn-primary" id="createCollectionBtn">
+                    <i class="fas fa-plus-circle"></i> Izveidot kolekciju
+                </button>
+            </div>
+        </section>
+
+        <section class="collections-ideas card">
+            <div class="section-header">
+                <div>
+                    <h2><i class="fas fa-compass"></i> Tematiskās idejas</h2>
+                    <p>Ātri pievieno sagatavotas receptes savām kolekcijām vai iedvesmojies jauniem garšu ceļojumiem.</p>
+                </div>
+            </div>
+            <div id="themedIdeas" class="ideas-grid"></div>
+        </section>
+    </main>
+
+    <!-- Create Collection Modal -->
+    <div id="createCollectionModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Izveidot jaunu kolekciju</h3>
+                <button class="modal-close" onclick="mainApp.closeCreateCollectionModal()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="createCollectionForm">
+                    <div class="form-group">
+                        <label for="collectionName">Kolekcijas nosaukums</label>
+                        <input type="text" id="collectionName" name="name" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="collectionDescription">Apraksts</label>
+                        <textarea id="collectionDescription" name="description" rows="3"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="collectionVisibility">Redzamība</label>
+                        <select id="collectionVisibility" name="visibility">
+                            <option value="private">Privāta</option>
+                            <option value="public">Publiska</option>
+                        </select>
+                    </div>
+                    <div class="form-actions">
+                        <button type="button" class="btn btn-outline" onclick="mainApp.closeCreateCollectionModal()">Atcelt</button>
+                        <button type="submit" class="btn btn-primary">Izveidot</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add to Collection Modal -->
+    <div id="addToCollectionModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Pievienot recepti kolekcijai</h3>
+                <button class="modal-close" onclick="mainApp.closeAddToCollectionModal()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div id="collectionsList"></div>
+                <div class="modal-actions">
+                    <button class="btn btn-outline" onclick="mainApp.closeAddToCollectionModal()">Atcelt</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="api.js"></script>
+    <script src="auth.js"></script>
+    <script src="theme.js"></script>
+    <script src="subscription-buttons.js"></script>
+    <script src="main.js"></script>
+    <script src="collections.js"></script>
+</body>
+</html>

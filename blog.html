@@ -1,0 +1,1154 @@
+<!DOCTYPE html>
+<html lang="lv">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Blogs - Kulinārijas grāmata</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body class="light-theme">
+    <header>
+        <div class="container">
+            <div class="header-content">
+                <div class="logo-and-search">
+                    <div class="logo">
+                        <h1>
+                            <a href="index.html">
+                                <i class="fas fa-utensils"></i> Kulinārijas grāmata
+                            </a>
+                        </h1>
+                    </div>
+                    <div class="header-controls">
+                        <div class="search-box">
+                            <input type="text" id="searchInput" placeholder="Meklēt receptes vai autorus...">
+                            <button type="button" onclick="mainApp.searchRecipes()"><i class="fas fa-search"></i></button>
+                        </div>
+                        <button class="theme-toggle" type="button" aria-label="Pārslēgt tēmu">
+                            <i class="fas fa-moon"></i>
+                        </button>
+                    </div>
+                </div>
+                <button class="mobile-menu-toggle" type="button" aria-label="Pārslēgt izvēlni">
+                    <i class="fas fa-bars"></i>
+                </button>
+                <nav class="navigation" aria-label="Galvenā navigācija">
+                    <ul>
+                            <li><a href="index.html"><i class="fas fa-home"></i> Galvenā</a></li>
+                            <li><a href="collections.html" class="protected"><i class="fas fa-folder-open"></i> Kolekcijas</a></li>
+                            <li><a href="subscriptions.html" class="protected"><i class="fas fa-users"></i> Abonementi</a></li>
+                            <li><a href="blog.html" class="active"><i class="fas fa-blog"></i> Blogs</a></li>
+                            <li><a href="add-recipe.html" class="protected"><i class="fas fa-plus-circle"></i> Pievienot recepti</a></li>
+                            <li><a href="profile.html" class="protected"><i class="fas fa-user"></i> Profils</a></li>
+                            <li class="auth-links">
+                                <!-- Auth links will be populated by auth.js -->
+                            </li>
+                    </ul>
+                </nav>
+            </div>
+        </div>
+    </header>
+
+<main class="container">
+        <section class="hero-banner">
+            <div class="hero-content">
+                <h2><i class="fas fa-pen-fancy"></i> Kulinārijas blogs</h2>
+                <p>Atklājiet garduma noslēpumus, pagatavošanas trikus un interesantus faktus no pasaules kulinārijas</p>
+                <button class="btn btn-primary protected" id="newPostBtn">
+                    <i class="fas fa-plus"></i> Rakstīt rakstu
+                </button>
+            </div>
+        </section>
+
+        <div class="blog-layout">
+            <!-- Sidebar -->
+            <aside class="blog-sidebar">
+                <div class="sidebar-card">
+                    <h3><i class="fas fa-filter"></i> Filtri</h3>
+                    <div class="filter-group">
+                        <label>Kategorija</label>
+                        <select id="blogCategoryFilter" class="filter-select">
+                            <option value="all">Visas kategorijas</option>
+                            <option value="tips">Padomi un triki</option>
+                            <option value="techniques">Pagatavošanas tehnikas</option>
+                            <option value="ingredients">Ingredienti</option>
+                            <option value="stories">Stāsti un pieredze</option>
+                        </select>
+                    </div>
+                    <div class="filter-group">
+                        <label>Kārtot pēc</label>
+                        <select id="blogSortFilter" class="filter-select">
+                            <option value="newest">Jaunākie</option>
+                            <option value="popular">Populārākie</option>
+                            <option value="featured">Iecienītie</option>
+                        </select>
+                    </div>
+                    <button class="btn btn-outline btn-full" id="applyFiltersBtn">
+                        <i class="fas fa-check"></i> Lietot filtrus
+                    </button>
+                </div>
+
+                <div class="sidebar-card">
+                    <h3><i class="fas fa-fire"></i> Populāri temati</h3>
+                    <div class="topics-list">
+                        <a href="#" class="topic-tag">Veganu receptes</a>
+                        <a href="#" class="topic-tag">Ātras brokastis</a>
+                        <a href="#" class="topic-tag">Ziemas ēdieni</a>
+                        <a href="#" class="topic-tag">Gardumi bērniem</a>
+                        <a href="#" class="topic-tag">Ziedu dekorēšana</a>
+                    </div>
+                </div>
+
+                <div class="sidebar-card">
+                    <h3><i class="fas fa-users"></i> Top autori</h3>
+                    <div class="blog-authors">
+                        <div class="blog-author">
+                            <img src="images/avatar.jpg" alt="Jānis Bērziņš" class="author-avatar">
+                            <div class="author-details">
+                                <strong>Jānis Bērziņš</strong>
+                                <span>15 raksti</span>
+                            </div>
+                        </div>
+                        <div class="blog-author">
+                            <img src="images/avatar.jpg" alt="Anna Liepa" class="author-avatar">
+                            <div class="author-details">
+                                <strong>Anna Liepa</strong>
+                                <span>12 raksti</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </aside>
+
+            <!-- Main Content -->
+            <section class="blog-main">
+                <div class="blog-stats">
+                    <div class="stat-card">
+                        <i class="fas fa-newspaper"></i>
+                        <div>
+                            <strong id="totalPosts">0</strong>
+                            <span>Kopā raksti</span>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <i class="fas fa-eye"></i>
+                        <div>
+                            <strong>1.2K</strong>
+                            <span>Kopā skatījumi</span>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <i class="fas fa-comments"></i>
+                        <div>
+                            <strong>156</strong>
+                            <span>Komentāri</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="featured-post" id="featuredPost">
+                    <!-- Featured post will be loaded here -->
+                </div>
+
+                <div class="blog-grid" id="blogGrid">
+                    <div class="loading">Ielādē bloga rakstus...</div>
+                </div>
+
+                <div class="load-more-container">
+                    <button class="btn btn-load-more" id="loadMorePosts">
+                        <i class="fas fa-redo"></i> Ielādēt vairāk rakstus
+                    </button>
+                </div>
+            </section>
+        </div>
+
+        <!-- New Post Form -->
+        <div id="newPostModal" class="modal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3><i class="fas fa-edit"></i> Jauna raksta izveide</h3>
+                    <button class="close-modal" id="closeModalBtn">&times;</button>
+                </div>
+                <form id="blogPostForm" class="editor-form">
+                    <div class="form-grid">
+                        <div class="form-group full-width">
+                            <label>Virsraksts *</label>
+                            <input type="text" id="postTitle" required placeholder="Ievadiet piesaistošu virsrakstu...">
+                        </div>
+
+                        <div class="form-group">
+                            <label>Kategorija *</label>
+                            <select id="postCategory" required>
+                                <option value="">Izvēlieties kategoriju</option>
+                                <option value="tips">Padomi un triki</option>
+                                <option value="techniques">Pagatavošanas tehnikas</option>
+                                <option value="ingredients">Ingredienti</option>
+                                <option value="stories">Stāsti un pieredze</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Vāksattēls URL</label>
+                            <input type="url" id="postImage" placeholder="https://example.com/image.jpg">
+                        </div>
+                    </div>
+
+                    <div class="form-group full-width">
+                        <label>Īss apraksts *</label>
+                        <textarea id="postExcerpt" required placeholder="Īss raksta anotācija, kas parādīsies sarakstā..." rows="3"></textarea>
+                    </div>
+
+                    <div class="form-group full-width">
+                        <label>Saturs *</label>
+                        <div class="editor-toolbar">
+                            <button type="button" class="toolbar-btn" data-command="bold" title="Treknraksts">
+                                <i class="fas fa-bold"></i>
+                            </button>
+                            <button type="button" class="toolbar-btn" data-command="italic" title="Kursīvs">
+                                <i class="fas fa-italic"></i>
+                            </button>
+                            <button type="button" class="toolbar-btn" data-command="underline" title="Pasvītrojums">
+                                <i class="fas fa-underline"></i>
+                            </button>
+                            <button type="button" class="toolbar-btn" data-command="insertUnorderedList" title="Saraksts">
+                                <i class="fas fa-list-ul"></i>
+                            </button>
+                            <button type="button" class="toolbar-btn" data-command="insertOrderedList" title="Numurēts saraksts">
+                                <i class="fas fa-list-ol"></i>
+                            </button>
+                        </div>
+                        <div id="postContent" class="editor-content" contenteditable="true" placeholder="Sāciet rakstīt savu rakstu šeit..."></div>
+                        <div class="editor-stats">
+                            <span id="charCount">0</span> rakstzīmes • 
+                            <span id="wordCount">0</span> vārdi
+                        </div>
+                    </div>
+
+                    <div class="publish-options">
+                        <h4><i class="fas fa-cog"></i> Publicēšanas iestatījumi</h4>
+                        <div class="option-group">
+                            <label class="checkbox-label">
+                                <input type="checkbox" id="featuredPost">
+                                <span class="checkmark"></span>
+                                Iecienītais raksts
+                            </label>
+                            <small>Parādīsies galvenajā bloga lapā</small>
+                        </div>
+                        <div class="option-group">
+                            <label class="checkbox-label">
+                                <input type="checkbox" id="allowComments" checked>
+                                <span class="checkmark"></span>
+                                Atļaut komentārus
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="form-actions">
+                        <button type="submit" class="btn btn-primary btn-large">
+                            <i class="fas fa-paper-plane"></i> Publicēt rakstu
+                        </button>
+                        <button type="button" class="btn btn-outline" id="saveDraftBtn">
+                            <i class="fas fa-save"></i> Saglabāt melnrakstu
+                        </button>
+                        <button type="button" class="btn btn-cancel" id="cancelPostBtn">
+                            <i class="fas fa-times"></i> Atcelt
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>Kulinārijas grāmata</h3>
+                    <p>Labākās receptes un padomi no Latvijas un visas pasaules.</p>
+                    <div class="social-links">
+                        <a href="#"><i class="fab fa-facebook"></i></a>
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+                        <a href="#"><i class="fab fa-pinterest"></i></a>
+                    </div>
+                </div>
+                <div class="footer-section">
+                    <h3>Navigācija</h3>
+                    <ul>
+                        <li><a href="index.html">Galvenā</a></li>
+                        <li><a href="add-recipe.html">Pievienot recepti</a></li>
+                        <li><a href="profile.html">Profils</a></li>
+                        <li><a href="blog.html">Blogs</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h3>Bloga kategorijas</h3>
+                    <ul>
+                        <li><a href="blog.html?category=tips">Padomi un triki</a></li>
+                        <li><a href="blog.html?category=techniques">Pagatavošanas tehnikas</a></li>
+                        <li><a href="blog.html?category=ingredients">Ingredienti</a></li>
+                        <li><a href="blog.html?category=stories">Stāsti un pieredze</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h3>Kontakti</h3>
+                    <p><i class="fas fa-envelope"></i> info@kulinarijasgramata.lv</p>
+                    <p><i class="fas fa-phone"></i> +371 12345678</p>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2024 Kulinārijas grāmata. Visas tiesības aizsargātas.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="api.js"></script>
+    <script src="auth.js"></script>
+    <script src="theme.js"></script>
+    <script src="main.js"></script>
+    <script>
+        class BlogPage {
+            constructor() {
+                this.currentPosts = [];
+                this.currentFilters = {
+                    category: 'all',
+                    sort: 'newest'
+                };
+                this.init();
+            }
+
+            init() {
+                this.setupEventListeners();
+                this.loadBlogPosts();
+                this.setupRichTextEditor();
+            }
+
+            setupEventListeners() {
+                // New post button
+                document.getElementById('newPostBtn').addEventListener('click', () => {
+                    if (!window.apiClient.isAuthenticated()) {
+                        window.authManager.showNotification('Lai rakstītu rakstus, jāpieslēdzas', 'error');
+                        return;
+                    }
+                    this.showNewPostModal();
+                });
+
+                // Modal controls
+                document.getElementById('closeModalBtn').addEventListener('click', () => {
+                    this.hideNewPostModal();
+                });
+
+                document.getElementById('cancelPostBtn').addEventListener('click', () => {
+                    this.hideNewPostModal();
+                });
+
+                // Filters
+                document.getElementById('applyFiltersBtn').addEventListener('click', () => {
+                    this.applyFilters();
+                });
+
+                // Load more
+                document.getElementById('loadMorePosts').addEventListener('click', () => {
+                    this.loadMorePosts();
+                });
+
+                // Form submission
+                document.getElementById('blogPostForm').addEventListener('submit', (e) => {
+                    this.handlePostSubmit(e);
+                });
+
+                // Close modal on outside click
+                document.getElementById('newPostModal').addEventListener('click', (e) => {
+                    if (e.target.id === 'newPostModal') {
+                        this.hideNewPostModal();
+                    }
+                });
+            }
+
+            setupRichTextEditor() {
+                const editor = document.getElementById('postContent');
+                const toolbarBtns = document.querySelectorAll('.toolbar-btn');
+
+                toolbarBtns.forEach(btn => {
+                    btn.addEventListener('click', () => {
+                        const command = btn.dataset.command;
+                        document.execCommand(command, false, null);
+                        editor.focus();
+                    });
+                });
+
+                editor.addEventListener('input', () => {
+                    this.updateEditorStats();
+                });
+            }
+
+            updateEditorStats() {
+                const content = document.getElementById('postContent').textContent;
+                const charCount = content.length;
+                const wordCount = content.split(/\s+/).filter(word => word.length > 0).length;
+                
+                document.getElementById('charCount').textContent = charCount;
+                document.getElementById('wordCount').textContent = wordCount;
+            }
+
+            async loadBlogPosts() {
+                try {
+                    const posts = await window.apiClient.getBlogPosts(this.filters);
+                    this.renderBlogPosts(posts);
+                } catch (error) {
+                    console.error('Error loading blog posts:', error);
+                    this.showNotification('Kļūda ielādējot bloga ierakstus: ' + error.message, 'error');
+                }
+            }
+
+            renderBlogContent(posts) {
+                this.renderFeaturedPost(posts);
+                this.renderBlogGrid(posts);
+                this.updateStats(posts);
+            }
+
+            renderFeaturedPost(posts) {
+                const featuredContainer = document.getElementById('featuredPost');
+                const featuredPost = posts.find(post => post.is_featured) || posts[0];
+
+                if (!featuredPost) {
+                    featuredContainer.innerHTML = '';
+                    return;
+                }
+
+                featuredContainer.innerHTML = `
+                    <div class="featured-post-card">
+                        <div class="featured-image">
+                            <img src="${featuredPost.image_url || 'images/cake.jpg'}" alt="${featuredPost.title}">
+                            <div class="featured-badge">Iecienītais</div>
+                        </div>
+                        <div class="featured-content">
+                            <div class="post-meta">
+                                <span class="post-category">${this.getCategoryName(featuredPost.category)}</span>
+                                <span class="post-date">${new Date(featuredPost.created_at).toLocaleDateString('lv-LV')}</span>
+                            </div>
+                            <h2>${featuredPost.title}</h2>
+                            <p class="featured-excerpt">${featuredPost.excerpt}</p>
+                            <div class="featured-footer">
+                                <div class="author-info">
+                                    <img src="images/avatar.jpg" alt="${featuredPost.author_name}" class="author-avatar">
+                                    <span>${featuredPost.author_name}</span>
+                                </div>
+                                <a href="blog-post.html?id=${featuredPost.id}" class="btn btn-primary">
+                                    Lasīt rakstu <i class="fas fa-arrow-right"></i>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }
+
+            renderBlogGrid(posts) {
+                const grid = document.getElementById('blogGrid');
+                const filteredPosts = this.filterPosts(posts);
+
+                if (filteredPosts.length === 0) {
+                    grid.innerHTML = '<p class="no-posts">Nav atrasti raksti ar izvēlētajiem filtriem</p>';
+                    return;
+                }
+
+                grid.innerHTML = filteredPosts.map(post => `
+                    <div class="blog-card" data-id="${post.id}">
+                        <div class="blog-image">
+                            <img src="${post.image_url || 'images/cake.jpg'}" alt="${post.title}">
+                            ${post.is_featured ? '<span class="blog-badge">Iecienītais</span>' : ''}
+                        </div>
+                        <div class="blog-content">
+                            <div class="blog-meta">
+                                <span class="blog-category">${this.getCategoryName(post.category)}</span>
+                                <span class="blog-date">${new Date(post.created_at).toLocaleDateString('lv-LV')}</span>
+                            </div>
+                            <h3>${post.title}</h3>
+                            <p class="blog-excerpt">${post.excerpt}</p>
+                            <div class="blog-footer">
+                                <div class="blog-author">
+                                    <img src="images/avatar.jpg" alt="${post.author_name}" class="author-avatar-small">
+                                    <span>${post.author_name}</span>
+                                </div>
+                                <a href="blog-post.html?id=${post.id}" class="btn btn-outline btn-small">
+                                    Lasīt tālāk
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                `).join('');
+            }
+
+            filterPosts(posts) {
+                let filtered = [...posts];
+
+                // Filter by category
+                if (this.currentFilters.category !== 'all') {
+                    filtered = filtered.filter(post => post.category === this.currentFilters.category);
+                }
+
+                // Sort posts
+                switch (this.currentFilters.sort) {
+                    case 'newest':
+                        filtered.sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
+                        break;
+                    case 'popular':
+                        filtered.sort((a, b) => (b.views || 0) - (a.views || 0));
+                        break;
+                    case 'featured':
+                        filtered.sort((a, b) => (b.is_featured ? 1 : 0) - (a.is_featured ? 1 : 0));
+                        break;
+                }
+
+                return filtered;
+            }
+
+            updateStats(posts) {
+                document.getElementById('totalPosts').textContent = posts.length;
+            }
+
+            getCategoryName(category) {
+                const categories = {
+                    'tips': 'Padomi un triki',
+                    'techniques': 'Pagatavošanas tehnikas',
+                    'ingredients': 'Ingredienti',
+                    'stories': 'Stāsti un pieredze'
+                };
+                return categories[category] || 'Cits';
+            }
+
+            applyFilters() {
+                this.currentFilters.category = document.getElementById('blogCategoryFilter').value;
+                this.currentFilters.sort = document.getElementById('blogSortFilter').value;
+                this.renderBlogGrid(this.currentPosts);
+            }
+
+            loadMorePosts() {
+                // In a real app, this would load more posts from the server
+                window.authManager.showNotification('Papildu raksti tiks ielādēti drīz!', 'info');
+            }
+
+            showNewPostModal() {
+                document.getElementById('newPostModal').style.display = 'block';
+                document.getElementById('postTitle').focus();
+                this.updateEditorStats();
+            }
+
+            hideNewPostModal() {
+                document.getElementById('newPostModal').style.display = 'none';
+                document.getElementById('blogPostForm').reset();
+                document.getElementById('postContent').innerHTML = '';
+            }
+
+            async handlePostSubmit(e) {
+                e.preventDefault();
+
+                const title = document.getElementById('postTitle').value.trim();
+                const excerpt = document.getElementById('postExcerpt').value.trim();
+                const content = document.getElementById('postContent').innerHTML.trim();
+                const category = document.getElementById('postCategory').value;
+                const imageUrl = document.getElementById('postImage').value.trim();
+                const isFeatured = document.getElementById('featuredPost').checked;
+                const allowComments = document.getElementById('allowComments').checked;
+
+                if (!title || !excerpt || !content || !category) {
+                    window.authManager.showNotification('Lūdzu, aizpildiet visus obligātos laukus!', 'error');
+                    return;
+                }
+
+                if (content === '<br>' || content === '') {
+                    window.authManager.showNotification('Raksta saturs nevar būt tukšs!', 'error');
+                    return;
+                }
+
+                try {
+                    const postData = {
+                        title,
+                        excerpt,
+                        content,
+                        category,
+                        image_url: imageUrl || null,
+                        is_featured: isFeatured,
+                        allow_comments: allowComments
+                    };
+
+                    await window.apiClient.createBlogPost(postData);
+                    window.authManager.showNotification('Raksts veiksmīgi publicēts!', 'success');
+                    
+                    const newAchievements = await window.apiClient.checkForNewAchievements();
+                    if (newAchievements.length > 0) {
+                        newAchievements.forEach(achievement => {
+                            window.authManager.showNotification(`🏆 Jauns sasniegums: ${achievement.title}`, 'success');
+                        });
+                    }
+
+                    this.hideNewPostModal();
+                    await this.loadBlogPosts();
+
+                } catch (error) {
+                    window.authManager.showNotification('Kļūda publicējot rakstu: ' + error.message, 'error');
+                }
+            }
+            // Метод для настройки фильтров
+setupFilters() {
+    const categoryFilter = document.getElementById('blogCategoryFilter');
+    const searchInput = document.getElementById('blogSearchInput');
+    
+    if (categoryFilter) {
+        categoryFilter.addEventListener('change', () => {
+            this.filters.category = categoryFilter.value;
+            this.loadBlogPosts();
+        });
+    }
+    
+    if (searchInput) {
+        searchInput.addEventListener('input', (e) => {
+            this.filters.search = e.target.value;
+            this.debouncedSearch();
+        });
+    }
+    
+    // Загружаем категории
+    this.loadBlogCategories();
+}
+
+// Метод для загрузки категорий блога
+loadBlogCategories() {
+    const categories = window.apiClient.getBlogCategories();
+    const categoryFilter = document.getElementById('blogCategoryFilter');
+    
+    if (categoryFilter) {
+        categoryFilter.innerHTML = `
+            <option value="all">Visas kategorijas</option>
+            ${categories.map(cat => 
+                `<option value="${cat.id}">${cat.name}</option>`
+            ).join('')}
+        `;
+    }
+}
+
+// Дебаунс для поиска
+debouncedSearch = this.debounce(() => {
+    this.loadBlogPosts();
+}, 300);
+
+debounce(func, wait) {
+    let timeout;
+    return function executedFunction(...args) {
+        const later = () => {
+            clearTimeout(timeout);
+            func(...args);
+        };
+        clearTimeout(timeout);
+        timeout = setTimeout(later, wait);
+    };
+}
+
+// Метод для отображения блог постов
+renderBlogPosts(posts) {
+    const container = document.getElementById('blogPostsGrid');
+    if (!container) return;
+
+    if (!posts || posts.length === 0) {
+        container.innerHTML = `
+            <div class="empty-state">
+                <i class="fas fa-newspaper fa-3x"></i>
+                <h3>Nav atrasti ieraksti</h3>
+                <p>Mēģiniet mainīt meklēšanas kritērijus vai filtrus</p>
+            </div>
+        `;
+        return;
+    }
+
+    container.innerHTML = posts.map(post => `
+        <article class="blog-post-card card" data-post-id="${post.id}">
+            <div class="blog-post-image">
+                <img src="${post.image_url || 'images/blog/placeholder.jpg'}" alt="${post.title}">
+                ${post.is_featured ? '<span class="featured-badge"><i class="fas fa-star"></i> Ieteicams</span>' : ''}
+            </div>
+            <div class="blog-post-content">
+                <div class="blog-post-meta">
+                    <span class="post-category">${this.getCategoryName(post.category)}</span>
+                    <span class="post-date">${new Date(post.created_at).toLocaleDateString('lv-LV')}</span>
+                </div>
+                <h3 class="blog-post-title">${post.title}</h3>
+                <p class="blog-post-excerpt">${post.excerpt}</p>
+                <div class="blog-post-footer">
+                    <div class="post-author">
+                        <img src="${this.getAuthorAvatar(post.author_id)}" alt="${post.author_name}" class="author-avatar-xs">
+                        <span>${post.author_name}</span>
+                    </div>
+                    <div class="post-stats">
+                        <span><i class="far fa-eye"></i> ${post.views || 0}</span>
+                        <span><i class="far fa-heart"></i> ${post.likes || 0}</span>
+                    </div>
+                </div>
+                <a href="blog-post.html?id=${post.id}" class="btn btn-outline btn-small">Lasīt vairāk</a>
+            </div>
+        </article>
+    `).join('');
+}
+
+// Вспомогательные методы
+getCategoryName(categoryId) {
+    const categories = window.apiClient.getBlogCategories();
+    const category = categories.find(cat => cat.id === categoryId);
+    return category ? category.name : 'Cits';
+}
+
+getAuthorAvatar(authorId) {
+    // В реальном приложении здесь был бы запрос к API для получения аватара автора
+    const users = JSON.parse(localStorage.getItem('users') || '[]');
+    const user = users.find(u => u.id === authorId);
+    return user ? user.avatar : 'images/avatar.jpg';
+}
+
+// Метод для показа/скрытия формы создания поста
+toggleCreateForm() {
+    const form = document.getElementById('createPostForm');
+    if (form) {
+        form.style.display = form.style.display === 'none' ? 'block' : 'none';
+    }
+}
+
+// Метод для обработки создания поста
+async handleCreatePost(e) {
+    e.preventDefault();
+    
+    if (!window.apiClient.isAuthenticated()) {
+        this.showNotification('Lai rakstīt blogā, jāpieslēdzas', 'error');
+        return;
+    }
+
+    const formData = new FormData(e.target);
+    
+    try {
+        const postData = {
+            title: formData.get('postTitle'),
+            excerpt: formData.get('postExcerpt'),
+            content: formData.get('postContent'),
+            category: formData.get('postCategory'),
+            image_url: formData.get('postImage') || 'images/blog/placeholder.jpg',
+            is_featured: formData.get('isFeatured') === 'on'
+        };
+
+        const result = await window.apiClient.createBlogPost(postData);
+        this.showNotification('Bloga ieraksts veiksmīgi publicēts!', 'success');
+        
+        // Сбрасываем форму и скрываем её
+        e.target.reset();
+        this.toggleCreateForm();
+        
+        // Перезагружаем посты
+        await this.loadBlogPosts();
+
+    } catch (error) {
+        this.showNotification('Kļūda publicējot ierakstu: ' + error.message, 'error');
+    }
+}
+        }
+
+        // Initialize blog page
+        document.addEventListener('DOMContentLoaded', () => {
+            window.blogPage = new BlogPage();
+        });
+    </script>
+
+    <style>
+        .blog-layout {
+            display: grid;
+            grid-template-columns: 300px 1fr;
+            gap: 2rem;
+            margin: 2rem 0;
+        }
+
+        @media (max-width: 1024px) {
+            .blog-layout {
+                grid-template-columns: 1fr;
+            }
+            
+            .blog-sidebar {
+                order: 2;
+            }
+            
+            .blog-main {
+                order: 1;
+            }
+        }
+
+        .blog-sidebar {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+
+        .sidebar-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 1.5rem;
+        }
+
+        .sidebar-card h3 {
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 1.1rem;
+        }
+
+        .filter-group {
+            margin-bottom: 1rem;
+        }
+
+        .filter-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+            font-size: 0.9rem;
+        }
+
+        .filter-select {
+            width: 100%;
+            padding: 0.5rem;
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            background: var(--bg-color);
+            color: var(--text-color);
+        }
+
+        .topics-list {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .topic-tag {
+            display: inline-block;
+            padding: 0.5rem 1rem;
+            background: var(--hover-bg);
+            color: var(--text-color);
+            text-decoration: none;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            transition: all 0.3s;
+        }
+
+        .topic-tag:hover {
+            background: var(--primary-color);
+            color: white;
+            transform: translateY(-1px);
+        }
+
+        .blog-authors {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .blog-author {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 0.75rem;
+            background: var(--hover-bg);
+            border-radius: 8px;
+            transition: all 0.3s;
+        }
+
+        .blog-author:hover {
+            transform: translateY(-1px);
+            box-shadow: var(--shadow);
+        }
+
+        .author-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+
+        .author-details {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .author-details strong {
+            font-size: 0.9rem;
+        }
+
+        .author-details span {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+        }
+
+        .blog-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            transition: all 0.3s;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow);
+        }
+
+        .stat-card i {
+            font-size: 2rem;
+            color: var(--primary-color);
+        }
+
+        .stat-card strong {
+            display: block;
+            font-size: 1.5rem;
+            font-weight: bold;
+        }
+
+        .stat-card span {
+            font-size: 0.9rem;
+            color: var(--text-muted);
+        }
+
+        .featured-post-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            overflow: hidden;
+            margin-bottom: 2rem;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 0;
+        }
+
+        @media (max-width: 768px) {
+            .featured-post-card {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .featured-image {
+            position: relative;
+            height: 300px;
+        }
+
+        .featured-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .featured-badge {
+            position: absolute;
+            top: 1rem;
+            left: 1rem;
+            background: var(--primary-color);
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+
+        .featured-content {
+            padding: 2rem;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .post-meta {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 1rem;
+            font-size: 0.9rem;
+        }
+
+        .post-category {
+            background: var(--primary-color);
+            color: white;
+            padding: 0.25rem 0.75rem;
+            border-radius: 12px;
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+
+        .post-date {
+            color: var(--text-muted);
+        }
+
+        .featured-content h2 {
+            font-size: 1.8rem;
+            margin-bottom: 1rem;
+            line-height: 1.3;
+        }
+
+        .featured-excerpt {
+            color: var(--text-muted);
+            line-height: 1.6;
+            margin-bottom: 1.5rem;
+            font-size: 1.1rem;
+        }
+
+        .featured-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .author-info {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .blog-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 1rem;
+        }
+
+        .blog-author {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.9rem;
+            color: var(--text-muted);
+        }
+
+        .author-avatar-small {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(5px);
+        }
+
+        .modal-content {
+            background: var(--card-bg);
+            margin: 2% auto;
+            border-radius: 16px;
+            width: 90%;
+            max-width: 800px;
+            max-height: 90vh;
+            overflow-y: auto;
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1.5rem 2rem;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .modal-header h3 {
+            margin: 0;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .close-modal {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: var(--text-muted);
+            padding: 0;
+            width: 30px;
+            height: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            transition: all 0.3s;
+        }
+
+        .close-modal:hover {
+            background: var(--hover-bg);
+            color: var(--error-color);
+        }
+
+        .editor-content {
+            min-height: 300px;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 1rem;
+            background: var(--bg-color);
+            color: var(--text-color);
+            outline: none;
+            line-height: 1.6;
+        }
+
+        .editor-content:empty:before {
+            content: attr(placeholder);
+            color: var(--text-muted);
+        }
+
+        .option-group {
+            margin-bottom: 1rem;
+        }
+
+        .checkbox-label {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            cursor: pointer;
+            margin-bottom: 0.25rem;
+        }
+
+        .checkmark {
+            width: 18px;
+            height: 18px;
+            border: 2px solid var(--border-color);
+            border-radius: 4px;
+            position: relative;
+            transition: all 0.3s;
+        }
+
+        .checkbox-label input:checked + .checkmark {
+            background: var(--primary-color);
+            border-color: var(--primary-color);
+        }
+
+        .checkbox-label input:checked + .checkmark:after {
+            content: '✓';
+            position: absolute;
+            color: white;
+            font-size: 12px;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        .checkbox-label input {
+            display: none;
+        }
+    </style>
+</body>
+</html>

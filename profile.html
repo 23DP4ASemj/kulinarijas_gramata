@@ -1,0 +1,635 @@
+<!DOCTYPE html>
+<html lang="lv">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profils - Kulinārijas grāmata</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body class="light-theme">
+    <header>
+        <div class="container">
+            <div class="header-content">
+                <div class="logo-and-search">
+                    <div class="logo">
+                        <h1>
+                            <a href="index.html">
+                                <i class="fas fa-utensils"></i> Kulinārijas grāmata
+                            </a>
+                        </h1>
+                    </div>
+                    <div class="header-controls">
+                        <div class="search-box">
+                            <input type="text" id="searchInput" placeholder="Meklēt receptes vai autorus...">
+                            <button type="button" onclick="mainApp.searchRecipes()"><i class="fas fa-search"></i></button>
+                        </div>
+                        <button class="theme-toggle" type="button" aria-label="Pārslēgt tēmu">
+                            <i class="fas fa-moon"></i>
+                        </button>
+                    </div>
+                </div>
+                <button class="mobile-menu-toggle" type="button" aria-label="Pārslēgt izvēlni">
+                    <i class="fas fa-bars"></i>
+                </button>
+                <nav class="navigation" aria-label="Galvenā navigācija">
+                    <ul>
+                            <li><a href="index.html"><i class="fas fa-home"></i> Galvenā</a></li>
+                            <li><a href="collections.html" class="protected"><i class="fas fa-folder-open"></i> Kolekcijas</a></li>
+                            <li><a href="subscriptions.html" class="protected"><i class="fas fa-users"></i> Abonementi</a></li>
+                            <li><a href="blog.html"><i class="fas fa-blog"></i> Blogs</a></li>
+                            <li><a href="add-recipe.html" class="protected"><i class="fas fa-plus-circle"></i> Pievienot recepti</a></li>
+                            <li><a href="profile.html" class="protected active"><i class="fas fa-user"></i> Profils</a></li>
+                            <li class="auth-links">
+                                <!-- Auth links will be populated by auth.js -->
+                            </li>
+                    </ul>
+                </nav>
+            </div>
+        </div>
+    </header>
+
+    <main class="container profile-page">
+        <section class="profile-header card">
+            <div class="profile-cover" id="profileCover"></div>
+            <div class="profile-main">
+                <div class="avatar-section">
+                    <div class="avatar-wrapper">
+                        <img src="images/avatar.jpg" alt="Profila attēls" class="avatar profile-avatar" id="userAvatar">
+                        <div class="avatar-actions">
+                            <button type="button" class="btn btn-outline" id="changeAvatarBtn">
+                                <i class="fas fa-camera"></i> Mainīt attēlu
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <div class="profile-info">
+                    <h1 id="userName">Ielādē...</h1>
+                    <p class="user-bio" id="userBio">Ielādē...</p>
+                    <div class="profile-stats">
+                        <div class="stat-item">
+                            <span class="stat-number" id="recipesCount">0</span>
+                            <span class="stat-label">Receptes</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-number" id="ratingAverage">0</span>
+                            <span class="stat-label">Vērtējums</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-number" id="followersCount" data-subscribers-for="">0</span>
+                            <span class="stat-label">Sekotāji</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-number" id="achievementsCount">0</span>
+                            <span class="stat-label">Sasniegumi</span>
+                        </div>
+                    </div>
+                    <div class="profile-actions">
+                        <button type="button" class="btn btn-primary" id="editProfileBtn">
+                            <i class="fas fa-edit"></i> Rediģēt profilu
+                        </button>
+                        <button type="button" class="btn btn-outline" id="messagesBtn">
+                            <i class="fas fa-envelope"></i> Ziņojumi
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="profile-achievements card">
+            <div class="achievements-header">
+                <div>
+                    <h3><i class="fas fa-trophy"></i> Sasniegumi</h3>
+                    <p>Progress un atslēgtās nozīmītes</p>
+                </div>
+            </div>
+            <div class="achievements-grid" id="achievementsGrid">
+                <div class="loading">Ielādē sasniegumus...</div>
+            </div>
+        </section>
+
+        <section class="profile-content card">
+            <div class="profile-tabs">
+                <button class="tab-btn active" data-tab="recipes">Manas receptes</button>
+                <button class="tab-btn" data-tab="favorites">Izlases saraksts</button>
+                <button class="tab-btn" data-tab="comments">Mani komentāri</button>
+                <button class="tab-btn" data-tab="settings">Iestatījumi</button>
+            </div>
+            <div class="tab-content">
+                <div id="recipes-tab" class="tab-pane active">
+                    <div class="recipes-grid" id="userRecipesGrid">
+                        <div class="loading">Ielādē jūsu receptes...</div>
+                    </div>
+                </div>
+
+                <div id="favorites-tab" class="tab-pane">
+                    <div class="recipes-grid" id="favoritesGrid">
+                        <div class="loading">Ielādē izlases receptes...</div>
+                    </div>
+                </div>
+
+                <div id="comments-tab" class="tab-pane">
+                    <div class="comments-list" id="userCommentsList">
+                        <div class="loading">Ielādē jūsu komentārus...</div>
+                    </div>
+                </div>
+
+                <div id="settings-tab" class="tab-pane">
+                    <div class="settings-form card">
+                        <h3>Profila iestatījumi</h3>
+                        <form id="profileSettingsForm">
+                            <div class="form-group">
+                                <label>Vārds</label>
+                                <input type="text" id="firstName" value="" required>
+                            </div>
+                            <div class="form-group">
+                                <label>Uzvārds</label>
+                                <input type="text" id="lastName" value="" required>
+                            </div>
+                            <div class="form-group">
+                                <label>E-pasts</label>
+                                <input type="email" id="userEmail" value="" required>
+                            </div>
+                            <div class="form-group">
+                                <label>Par sevi</label>
+                                <textarea id="userBioText" rows="3" placeholder="Pastāstiet par sevi..."></textarea>
+                            </div>
+                            <div class="form-group">
+                                <label>Jauna parole</label>
+                                <input type="password" id="newPassword" placeholder="Ievadiet jauno paroli">
+                                <small>Atstājiet tukšu, ja nevēlaties mainīt paroli</small>
+                            </div>
+                            <button type="submit" class="btn btn-primary">Saglabāt izmaiņas</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>Kulinārijas grāmata</h3>
+                    <p>Labākās receptes no Latvijas un visas pasaules.</p>
+                </div>
+                <div class="footer-section">
+                    <h3>Navigācija</h3>
+                    <ul>
+                        <li><a href="index.html">Galvenā</a></li>
+                        <li><a href="add-recipe.html">Pievienot recepti</a></li>
+                        <li><a href="profile.html">Profils</a></li>
+                        <li><a href="blog.html">Blogs</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2024 Kulinārijas grāmata. Visas tiesības aizsargātas.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="api.js"></script>
+    <script src="auth.js"></script>
+    <script src="theme.js"></script>
+    <script src="main.js"></script>
+    <script>
+        class ProfilePage {
+            constructor() {
+                this.currentUser = null;
+                this.init();
+            }
+
+            init() {
+                this.checkAuthentication();
+                this.loadUserData();
+                this.setupTabs();
+                this.setupEventListeners();
+            }
+
+            checkAuthentication() {
+                if (!window.apiClient.isAuthenticated()) {
+                    window.location.href = 'login.html?redirect=profile.html';
+                    return;
+                }
+            }
+
+            async loadAchievements() {
+                try {
+                    const achievements = await window.apiClient.getUserAchievements();
+                    this.renderAchievements(achievements);
+                } catch (error) {
+                    console.error('Error loading achievements:', error);
+                }
+            }
+
+            renderAchievements(achievements) {
+                const container = document.getElementById('achievementsGrid');
+                if (!container) return;
+
+                if (!achievements || achievements.length === 0) {
+                    container.innerHTML = '<p class="no-data">Veiciet pirmās darbības, lai redzētu sasniegumus!</p>';
+                    return;
+                }
+
+                container.innerHTML = achievements.map(achievement => `
+                    <div class="achievement-badge ${achievement.isUnlocked ? 'unlocked ' + achievement.color : 'current'}" 
+                         data-achievement="${achievement.key}">
+                        <i class="fas ${achievement.icon}"></i>
+                        <div class="badge-title">
+                            ${achievement.title}
+                            ${achievement.isUnlocked ? '<span class="badge-check">✓</span>' : ''}
+                        </div>
+                        <div class="badge-description">${achievement.description}</div>
+                        ${!achievement.isUnlocked ? `
+                            <div class="badge-progress">
+                                <div class="progress-fill" style="width: ${achievement.progress}%"></div>
+                            </div>
+                            <div class="achievement-stats">
+                                <span class="progress-count">${achievement.current}/${achievement.target}</span>
+                                <span class="progress-percent">${Math.round(achievement.progress)}%</span>
+                            </div>
+                        ` : `
+                            <div class="achievement-stats unlocked-stats">
+                                <span class="unlocked-date">Sasniegts: ${new Date(achievement.unlockedAt).toLocaleDateString('lv-LV')}</span>
+                            </div>
+                        `}
+                    </div>
+                `).join('');
+            }
+
+            async loadUserData() {
+                this.currentUser = window.apiClient.getCurrentUser();
+                if (this.currentUser) {
+                    await this.renderProfile();
+                    await this.loadUserRecipes();
+                    await this.loadFavorites();
+                    await this.loadUserComments();
+                    await this.loadAchievements();
+                }
+            }
+
+            renderProfile() {
+                document.getElementById('userName').textContent = this.currentUser.fullName || this.currentUser.username || 'Lietotājs';
+                document.getElementById('userBio').textContent = this.currentUser.bio || 'Nav informācijas';
+                document.getElementById('userAvatar').src = this.currentUser.avatar || 'images/avatar.jpg';
+                
+                const coverEl = document.getElementById('profileCover');
+                if (coverEl) {
+                    const coverUrl = this.currentUser.cover || 'images/spaghetti.jpg';
+                    coverEl.style.backgroundImage = `linear-gradient(135deg, rgba(17, 24, 39, 0.55), rgba(30, 41, 59, 0.45)), url('${coverUrl}')`;
+                    coverEl.style.backgroundSize = 'cover';
+                    coverEl.style.backgroundPosition = 'center';
+                }
+                
+                // Update form fields
+                const nameParts = (this.currentUser.fullName || '').trim().split(/\s+/).filter(Boolean);
+                const [firstName = '', ...restName] = nameParts;
+                document.getElementById('firstName').value = firstName;
+                document.getElementById('lastName').value = restName.join(' ');
+                document.getElementById('userEmail').value = this.currentUser.email || '';
+                document.getElementById('userBioText').value = this.currentUser.bio || '';
+                
+                // Update stats
+                this.updateStats();
+            }
+
+            async updateStats() {
+                const user = this.currentUser;
+                if (!user) return;
+
+                try {
+                    const recipes = await window.apiClient.getUserRecipes(user.id);
+                    const achievements = await window.apiClient.getUserAchievements();
+                    const unlockedAchievements = achievements.filter(a => a.isUnlocked);
+                    
+                    // Derive follower count from stored subscriptions
+                    const subscriptions = JSON.parse(localStorage.getItem('subscriptions') || '[]');
+                    const subscribers = subscriptions.filter(sub => sub.following_id === user.id);
+                    
+                    document.getElementById('recipesCount').textContent = recipes.length;
+                    const followersCountEl = document.getElementById('followersCount');
+                    if (followersCountEl) {
+                        followersCountEl.textContent = subscribers.length;
+                        followersCountEl.dataset.subscribersFor = user.id;
+                    }
+                    document.getElementById('achievementsCount').textContent = unlockedAchievements.length;
+                    
+                    // Calculate average recipe rating for display
+                    const avgRating = recipes.length > 0 ? 
+                        (recipes.reduce((sum, r) => sum + (r.average_rating || 0), 0) / recipes.length).toFixed(1) : '0';
+                    document.getElementById('ratingAverage').textContent = avgRating;
+                    
+                } catch (error) {
+                    console.error('Error updating stats:', error);
+                }
+            }
+
+            switchTab(tabName) {
+                // Hide all tabs
+                document.querySelectorAll('.tab-pane').forEach(pane => {
+                    pane.classList.remove('active');
+                });
+                document.querySelectorAll('.tab-btn').forEach(btn => {
+                    btn.classList.remove('active');
+                });
+
+                // Show selected tab
+                document.getElementById(`${tabName}-tab`).classList.add('active');
+                document.querySelector(`[data-tab="${tabName}"]`).classList.add('active');
+            }
+
+            setupTabs() {
+                const tabButtons = document.querySelectorAll('.tab-btn');
+                if (!tabButtons.length) {
+                    return;
+                }
+
+                tabButtons.forEach((button) => {
+                    button.addEventListener('click', () => {
+                        const tabName = button.dataset.tab;
+                        if (!tabName) {
+                            return;
+                        }
+                        this.switchTab(tabName);
+                    });
+                });
+            }
+
+            setupEventListeners() {
+                const settingsForm = document.getElementById('profileSettingsForm');
+                if (settingsForm) {
+                    settingsForm.addEventListener('submit', (e) => this.handleSettingsSave(e));
+                }
+
+                const changeAvatarBtn = document.getElementById('changeAvatarBtn');
+                if (changeAvatarBtn) {
+                    changeAvatarBtn.addEventListener('click', () => this.changeAvatar());
+                }
+
+                const editProfileBtn = document.getElementById('editProfileBtn');
+                if (editProfileBtn) {
+                    editProfileBtn.addEventListener('click', () => this.editProfile());
+                }
+
+                const messagesBtn = document.getElementById('messagesBtn');
+                if (messagesBtn) {
+                    messagesBtn.addEventListener('click', () => this.showMessages());
+                }
+            }
+
+            async loadUserRecipes() {
+                try {
+                    const user = window.apiClient.getCurrentUser();
+                    if (!user) {
+                        this.showNotification('Lietotājs nav atrasts', 'error');
+                        return;
+                    }
+                    
+                    const recipes = await window.apiClient.getUserRecipes(user.id);
+                    this.renderUserRecipes(recipes);
+                } catch (error) {
+                    console.error('Error loading user recipes:', error);
+                    this.showNotification('Kļūda ielādējot receptes: ' + error.message, 'error');
+                }
+            }
+
+            renderUserRecipes(recipes) {
+                const container = document.getElementById('userRecipesGrid');
+                if (!container) return;
+
+                if (!recipes || recipes.length === 0) {
+                    container.innerHTML = '<p class="no-data">Jums vēl nav publicētu recepšu</p>';
+                    return;
+                }
+
+                container.innerHTML = recipes.map(recipe => `
+                    <div class="recipe-card">
+                        <div class="recipe-image">
+                            <img src="${recipe.image_url || 'images/cake.jpg'}" alt="${recipe.title}">
+                        </div>
+                        <div class="recipe-info">
+                            <h3>${recipe.title}</h3>
+                            <p class="recipe-description">${recipe.description}</p>
+                            <div class="recipe-meta">
+                                <span class="recipe-time">${recipe.prep_time} min</span>
+                                <span class="recipe-difficulty difficulty-${recipe.difficulty}">
+                                    ${recipe.difficulty === 'easy' ? 'Viegli' : recipe.difficulty === 'medium' ? 'Vidēji' : 'Grūti'}
+                                </span>
+                            </div>
+                            <a href="recipe.html?id=${recipe.id}" class="btn btn-outline">Skatīt recepti</a>
+                        </div>
+                    </div>
+                `).join('');
+            }
+
+            async loadFavorites() {
+                try {
+                    const favoriteRecipes = await window.apiClient.getUserFavorites();
+                    this.renderFavorites(favoriteRecipes);
+                } catch (error) {
+                    console.error('Error loading favorites:', error);
+                    this.showNotification('Kļūda ielādējot izlūkus: ' + error.message, 'error');
+                }
+            }
+
+            renderFavorites(recipes) {
+                const container = document.getElementById('favoritesGrid');
+                if (!container) return;
+
+                if (!recipes || recipes.length === 0) {
+                    container.innerHTML = '<p class="no-data">Jums vēl nav pievienotu izlūku recepšu</p>';
+                    return;
+                }
+
+                container.innerHTML = recipes.map(recipe => `
+                    <div class="recipe-card">
+                        <div class="recipe-image">
+                            <img src="${recipe.image_url || 'images/cake.jpg'}" alt="${recipe.title}">
+                            <button class="favorite-btn active" onclick="window.profilePage.toggleFavorite(${recipe.id})">
+                                <i class="fas fa-heart"></i>
+                            </button>
+                        </div>
+                        <div class="recipe-info">
+                            <h3>${recipe.title}</h3>
+                            <p class="recipe-description">${recipe.description}</p>
+                            <a href="recipe.html?id=${recipe.id}" class="btn btn-outline">Skatīt recepti</a>
+                        </div>
+                    </div>
+                `).join('');
+            }
+
+            async loadUserComments() {
+                try {
+                    const userComments = await window.apiClient.getUserComments();
+                    this.renderUserComments(userComments);
+                } catch (error) {
+                    console.error('Error loading comments:', error);
+                    this.showNotification('Kļūda ielādējot komentārus: ' + error.message, 'error');
+                }
+            }
+
+            renderUserComments(comments) {
+                const container = document.getElementById('userCommentsList');
+                if (!container) return;
+
+                if (!comments || comments.length === 0) {
+                    container.innerHTML = '<p class="no-data">Jums vēl nav rakstītu komentāru</p>';
+                    return;
+                }
+
+                container.innerHTML = comments.map(comment => `
+                    <div class="comment card">
+                        <div class="comment-header">
+                            <div class="comment-author">
+                                <img src="${comment.avatar_url || 'images/avatar.jpg'}" alt="${comment.full_name}" class="comment-avatar">
+                                <div>
+                                    <strong>${comment.full_name}</strong>
+                                    <span class="comment-date">${new Date(comment.created_at).toLocaleDateString('lv-LV')}</span>
+                                </div>
+                            </div>
+                        </div>
+                        <p class="comment-text">${comment.comment_text}</p>
+                        <div class="comment-actions">
+                            <a href="recipe.html?id=${comment.recipe_id}" class="btn btn-outline btn-small">Skatīt recepti</a>
+                        </div>
+                    </div>
+                `).join('');
+            }
+
+            // Quick action helpers
+            editProfile() {
+                this.switchTab('settings');
+            }
+
+            changeAvatar() {
+                const newAvatar = prompt('Ievadiet jauna attēla URL:');
+                if (newAvatar) {
+                    this.currentUser.avatar = newAvatar;
+                    localStorage.setItem('currentUser', JSON.stringify(this.currentUser));
+                    this.renderProfile();
+                    this.showNotification('Profila attēls atjaunināts', 'success');
+                }
+            }
+
+            showMessages() {
+                this.showNotification('Ziņojumu sistēma tiks ieviesta drīz', 'info');
+            }
+
+            async toggleFavorite(recipeId) {
+                try {
+                    const result = await window.apiClient.toggleFavorite(recipeId);
+                    this.showNotification(result.message, 'success');
+                    await this.loadFavorites(); // Refresh favorites after toggling
+                } catch (error) {
+                    this.showNotification('Kļūda: ' + error.message, 'error');
+                }
+            }
+
+            async handleSettingsSave(e) {
+                e.preventDefault();
+                
+                const formData = {
+                    firstName: document.getElementById('firstName').value.trim(),
+                    lastName: document.getElementById('lastName').value.trim(),
+                    email: document.getElementById('userEmail').value.trim(),
+                    bio: document.getElementById('userBioText').value.trim(),
+                    newPassword: document.getElementById('newPassword').value
+                };
+
+                try {
+                    // Persist updated profile details locally
+                    const fullName = [formData.firstName, formData.lastName].filter(Boolean).join(' ');
+                    this.currentUser.fullName = fullName;
+                    this.currentUser.email = formData.email;
+                    this.currentUser.bio = formData.bio;
+                    
+                    localStorage.setItem('currentUser', JSON.stringify(this.currentUser));
+                    
+                    this.showNotification('Iestatījumi saglabāti veiksmīgi!', 'success');
+                    this.renderProfile();
+                    
+                    // Clear password input after save
+                    document.getElementById('newPassword').value = '';
+
+                } catch (error) {
+                    this.showNotification('Kļūda saglabājot iestatījumus', 'error');
+                }
+            }
+
+            showNotification(message, type = 'info') {
+                if (window.authManager && window.authManager.showNotification) {
+                    window.authManager.showNotification(message, type);
+                } else {
+                    // Basic fallback when notification service is unavailable
+                    alert(message);
+                }
+            }
+
+            showError(message) {
+                this.showNotification(message, 'error');
+            }
+
+            // Refresh achievements when the underlying data changes
+            async updateAchievementDisplay() {
+                const achievements = await window.apiClient.getUserAchievements();
+                const container = document.getElementById('achievementsGrid');
+                
+                if (!container) return;
+                
+                // Capture achievement keys currently rendered in the DOM
+                const currentAchievementKeys = Array.from(container.querySelectorAll('.achievement-badge'))
+                    .map(badge => badge.dataset.achievement);
+                
+                const newAchievementKeys = achievements.map(a => a.key);
+                
+                // Re-render badges if the set of achievements changed
+                if (JSON.stringify(currentAchievementKeys.sort()) !== JSON.stringify(newAchievementKeys.sort())) {
+                    this.renderAchievements(achievements);
+                } else {
+                    // Otherwise update progress values in place
+                    this.updateAchievementProgress(achievements);
+                }
+            }
+
+            // Update progress indicators for each badge
+            updateAchievementProgress(achievements) {
+                achievements.forEach(achievement => {
+                    const badge = document.querySelector(`[data-achievement="${achievement.key}"]`);
+                    if (badge) {
+                        // Update the progress bar width
+                        const progressFill = badge.querySelector('.progress-fill');
+                        if (progressFill) {
+                            progressFill.style.width = `${achievement.progress}%`;
+                        }
+                        
+                        // Update numeric progress totals
+                        const progressCount = badge.querySelector('.progress-count');
+                        if (progressCount) {
+                            progressCount.textContent = `${achievement.current}/${achievement.target}`;
+                        }
+                        
+                        const progressPercent = badge.querySelector('.progress-percent');
+                        if (progressPercent) {
+                            progressPercent.textContent = `${Math.round(achievement.progress)}%`;
+                        }
+                        
+                        // Highlight recently updated achievements
+                        badge.classList.add('achievement-updated');
+                        setTimeout(() => {
+                            badge.classList.remove('achievement-updated');
+                        }, 500);
+                    }
+                });
+            }
+        }
+
+        // Initialize profile page
+        document.addEventListener('DOMContentLoaded', () => {
+            window.profilePage = new ProfilePage();
+        });
+    </script>
+</body>
+</html>

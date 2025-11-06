@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="lv">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kulinārijas grāmata - Labākās receptes</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body class="light-theme">
+    <header>
+        <div class="container">
+            <div class="header-content">
+                <div class="logo-and-search">
+                    <div class="logo">
+                        <h1>
+                            <a href="index.html">
+                                <i class="fas fa-utensils"></i> Kulinārijas grāmata
+                            </a>
+                        </h1>
+                    </div>
+                    <div class="header-controls">
+                        <div class="search-box">
+                            <input type="text" id="searchInput" placeholder="Meklēt receptes vai autorus...">
+                            <button type="button" onclick="mainApp.searchRecipes()"><i class="fas fa-search"></i></button>
+                        </div>
+                        <button class="theme-toggle" type="button" aria-label="Pārslēgt tēmu">
+                            <i class="fas fa-moon"></i>
+                        </button>
+                    </div>
+                </div>
+                <button class="mobile-menu-toggle" type="button" aria-label="Pārslēgt izvēlni">
+                    <i class="fas fa-bars"></i>
+                </button>
+                <nav class="navigation" aria-label="Galvenā navigācija">
+                    <ul>
+                            <li><a href="index.html" class="active"><i class="fas fa-home"></i> Galvenā</a></li>
+                            <li><a href="collections.html" class="protected"><i class="fas fa-folder-open"></i> Kolekcijas</a></li>
+                            <li><a href="subscriptions.html" class="protected"><i class="fas fa-users"></i> Abonementi</a></li>
+                            <li><a href="blog.html"><i class="fas fa-blog"></i> Blogs</a></li>
+                            <li><a href="add-recipe.html" class="protected"><i class="fas fa-plus-circle"></i> Pievienot recepti</a></li>
+                            <li><a href="profile.html" class="protected"><i class="fas fa-user"></i> Profils</a></li>
+                            <li class="auth-links">
+                                <!-- Auth links will be populated by auth.js -->
+                            </li>
+                    </ul>
+                </nav>
+            </div>
+        </div>
+    </header>
+
+<main class="container">
+        <!-- Hero Section -->
+        <section class="hero-banner">
+            <div class="hero-content">
+                <h2>Atklājiet pasaules garšu brīnumus</h2>
+                <p>Kopienā jau vairāk nekā 1000 unikālu recepšu no entuziastiem visā pasaulē</p>
+                <div class="hero-actions">
+                    <a href="add-recipe.html" class="btn btn-primary protected">
+                        <i class="fas fa-plus"></i> Pievienot savu recepti
+                    </a>
+                    <a href="#recipes" class="btn btn-outline">
+                        <i class="fas fa-utensils"></i> Izpētīt receptes
+                    </a>
+                </div>
+                <div class="hero-stats">
+                    <div class="hero-stat">
+                        <strong>1,250+</strong>
+                        <span>Receptes</span>
+                    </div>
+                    <div class="hero-stat">
+                        <strong>500+</strong>
+                        <span>Autori</span>
+                    </div>
+                    <div class="hero-stat">
+                        <strong>15K+</strong>
+                        <span>Vērtējumi</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Subscription Feed (for logged-in users) -->
+        <section id="subscriptionFeedSection" class="subscription-feed-section" style="display: none;">
+            <div class="section-header">
+                <h2><i class="fas fa-newspaper"></i> Jūsu abonēto autoru jaunākās receptes</h2>
+                <a href="subscriptions.html" class="btn btn-outline btn-small">Skatīt visus abonementus</a>
+            </div>
+            <div id="subscriptionFeed">
+                <!-- Subscription feed will be loaded here -->
+            </div>
+        </section>
+
+        <!-- Top Section -->
+        <section class="top-section">
+            <div class="top-authors card">
+                <div class="section-header">
+                    <h2><i class="fas fa-crown"></i> Top autori</h2>
+                    <small>Pēc receptju kvalitātes un kopienas atsaucības</small>
+                </div>
+                <div class="authors-list" id="topAuthorsList">
+                    <div class="loading">Ielādē top autorus...</div>
+                </div>
+            </div>
+
+            <div class="top-recipes card">
+                <div class="section-header">
+                    <h2><i class="fas fa-fire"></i> Top receptes</h2>
+                    <small>Šonedēļ populārākās receptes</small>
+                </div>
+                <div class="top-recipes-list" id="topRecipesList">
+                    <div class="loading">Ielādē top receptes...</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Recommended Users -->
+        <section id="recommendedUsers">
+            <!-- Recommended users will be loaded here -->
+        </section>
+
+        <!-- All Recipes Section -->
+        <section id="recipes" class="recipes-section">
+            <div class="section-header">
+                <h2>Visas receptes</h2>
+                <div class="filter-controls">
+                    <select id="categoryFilter">
+                        <option value="all">Visas kategorijas</option>
+                        <option value="1">Galvenie ēdieni</option>
+                        <option value="2">Deserti</option>
+                        <option value="3">Salāti</option>
+                        <option value="4">Zupas</option>
+                    </select>
+                    <select id="difficultyFilter">
+                        <option value="all">Visas sarežģītības</option>
+                        <option value="easy">Viegli</option>
+                        <option value="medium">Vidēji</option>
+                        <option value="hard">Grūti</option>
+                    </select>
+                    <select id="sortFilter">
+                        <option value="newest">Jaunākās</option>
+                        <option value="popular">Populārākās</option>
+                        <option value="rating">Augstākais vērtējums</option>
+                    </select>
+                </div>
+            </div>
+            
+            <div class="recipes-grid" id="recipesGrid">
+                <div class="loading">Ielādē receptes...</div>
+            </div>
+            
+            <div class="load-more-container">
+                <button class="btn btn-load-more" id="loadMore">
+                    <i class="fas fa-redo"></i> Ielādēt vairāk receptes
+                </button>
+            </div>
+        </section>
+
+        <!-- Features Section -->
+        <section class="features-section">
+            <div class="section-header text-center">
+                <h2>Kāpēc izvēlēties mūsu platformu?</h2>
+                <p>Visas funkcijas, kas nepieciešamas kulinārijas entuziastam</p>
+            </div>
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-users"></i>
+                    </div>
+                    <h3>Kopiena</h3>
+                    <p>Pievienojieties lieliskai kulinārijas entuziastu kopienai, dalieties receptēm un gūstiet iedvesmu</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-star"></i>
+                    </div>
+                    <h3>Vērtējumi</h3>
+                    <p>Saņemiet atsauksmes par savām receptēm un atrodiet labākās receptes, balstoties uz reāliem vērtējumiem</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-trophy"></i>
+                    </div>
+                    <h3>Sasniegumi</h3>
+                    <p>Piepildiet izaicinājumus, pelniet balvas un kļūstiet par atzītu kulinārijas ekspertu</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-mobile-alt"></i>
+                    </div>
+                    <h3>Pieejamība</h3>
+                    <p>Lietojiet platformu jebkurā ierīcē - datorā, planšetē vai viedtālrunī</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Quick Actions -->
+        <section class="quick-actions-section">
+            <div class="quick-actions-grid">
+                <a href="add-recipe.html" class="quick-action-card protected">
+                    <div class="action-icon">
+                        <i class="fas fa-plus-circle"></i>
+                    </div>
+                    <h3>Pievienot recepti</h3>
+                    <p>Dalieties ar savu gardāko recepti ar kopienu</p>
+                </a>
+                <a href="collections.html" class="quick-action-card protected">
+                    <div class="action-icon">
+                        <i class="fas fa-folder-plus"></i>
+                    </div>
+                    <h3>Izveidot kolekciju</h3>
+                    <p>Organizējiet receptes tematiskās kolekcijās</p>
+                </a>
+                <a href="blog.html" class="quick-action-card">
+                    <div class="action-icon">
+                        <i class="fas fa-edit"></i>
+                    </div>
+                    <h3>Rakstīt blogā</h3>
+                    <p>Dalieties ar padomiem un kulinārijas pieredzi</p>
+                </a>
+                <a href="explore.html" class="quick-action-card">
+                    <div class="action-icon">
+                        <i class="fas fa-compass"></i>
+                    </div>
+                    <h3>Izpētīt autorus</h3>
+                    <p>Atrodiet interesantus autorus un sekojiet viņiem</p>
+                </a>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>Kulinārijas grāmata</h3>
+                    <p>Kopienas platforma kulinārijas entuziastiem. Dalieties, mācieties un iedvesmojieties.</p>
+                    <div class="social-links">
+                        <a href="#"><i class="fab fa-facebook"></i></a>
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+                        <a href="#"><i class="fab fa-pinterest"></i></a>
+                        <a href="#"><i class="fab fa-youtube"></i></a>
+                    </div>
+                </div>
+                <div class="footer-section">
+                    <h3>Navigācija</h3>
+                    <ul>
+                        <li><a href="index.html">Galvenā</a></li>
+                        <li><a href="add-recipe.html">Pievienot recepti</a></li>
+                        <li><a href="profile.html">Profils</a></li>
+                        <li><a href="collections.html">Kolekcijas</a></li>
+                        <li><a href="blog.html">Blogs</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h3>Kategorijas</h3>
+                    <ul>
+                        <li><a href="index.html?category=1">Galvenie ēdieni</a></li>
+                        <li><a href="index.html?category=2">Deserti</a></li>
+                        <li><a href="index.html?category=3">Salāti</a></li>
+                        <li><a href="index.html?category=4">Zupas</a></li>
+                        <li><a href="index.html?category=5">Brokastis</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h3>Atbalsts</h3>
+                    <ul>
+                        <li><a href="help.html">Palīdzība centrs</a></li>
+                        <li><a href="contact.html">Kontakti</a></li>
+                        <li><a href="privacy.html">Privātuma politika</a></li>
+                        <li><a href="terms.html">Lietošanas noteikumi</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2024 Kulinārijas grāmata. Visas tiesības aizsargātas.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="api.js"></script>
+    <script src="auth.js"></script>
+    <script src="theme.js"></script>
+    <script src="subscription-buttons.js"></script>
+    <script src="main.js"></script>
+    
+</body>
+</html>

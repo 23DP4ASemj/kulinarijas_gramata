@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="lv">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pievienot recepti - Kulinārijas grāmata</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body class="light-theme">
+    <header>
+        <div class="container">
+            <div class="header-content">
+                <div class="logo-and-search">
+                    <div class="logo">
+                        <h1>
+                            <a href="index.html">
+                                <i class="fas fa-utensils"></i> Kulinārijas grāmata
+                            </a>
+                        </h1>
+                    </div>
+                    <div class="header-controls">
+                        <div class="search-box">
+                            <input type="text" id="searchInput" placeholder="Meklēt receptes vai autorus...">
+                            <button type="button" onclick="mainApp.searchRecipes()"><i class="fas fa-search"></i></button>
+                        </div>
+                        <button class="theme-toggle" type="button" aria-label="Pārslēgt tēmu">
+                            <i class="fas fa-moon"></i>
+                        </button>
+                    </div>
+                </div>
+                <button class="mobile-menu-toggle" type="button" aria-label="Pārslēgt izvēlni">
+                    <i class="fas fa-bars"></i>
+                </button>
+                <nav class="navigation" aria-label="Galvenā navigācija">
+                    <ul>
+                            <li><a href="index.html"><i class="fas fa-home"></i> Galvenā</a></li>
+                            <li><a href="collections.html" class="protected"><i class="fas fa-folder-open"></i> Kolekcijas</a></li>
+                            <li><a href="subscriptions.html" class="protected"><i class="fas fa-users"></i> Abonementi</a></li>
+                            <li><a href="blog.html"><i class="fas fa-blog"></i> Blogs</a></li>
+                            <li><a href="add-recipe.html" class="protected active"><i class="fas fa-plus-circle"></i> Pievienot recepti</a></li>
+                            <li><a href="profile.html" class="protected"><i class="fas fa-user"></i> Profils</a></li>
+                            <li class="auth-links">
+                                <!-- Auth links will be populated by auth.js -->
+                            </li>
+                    </ul>
+                </nav>
+            </div>
+        </div>
+    </header>
+
+<main class="container">
+        <div class="page-header">
+            <h1><i class="fas fa-plus-circle"></i> Pievienot jaunu recepti</h1>
+            <p>Kopīgojiet savu gardāko recepti ar citiem kopienas locekļiem</p>
+        </div>
+
+        <form id="addRecipeForm" class="recipe-form card"> <!-- Изменил ID на addRecipeForm -->
+            <div class="form-grid">
+                <div class="form-group full-width">
+                    <label for="recipeTitle">Receptes nosaukums *</label>
+                    <input type="text" id="recipeTitle" name="title" required placeholder="Piemēram, Spageti Karbonāra">
+                </div>
+
+                <div class="form-group">
+                    <label for="recipeCategory">Kategorija *</label>
+                    <select id="recipeCategory" name="category" required>
+                        <option value="">Izvēlieties kategoriju</option>
+                        <option value="1">Galvenais ēdiens</option>
+                        <option value="2">Deserti</option>
+                        <option value="3">Salāti</option>
+                        <option value="4">Zupas</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="recipeDifficulty">Sarežģītības pakāpe *</label>
+                    <select id="recipeDifficulty" name="difficulty" required>
+                        <option value="easy">Viegli (iesācējiem)</option>
+                        <option value="medium">Vidēji (ar pieredzi)</option>
+                        <option value="hard">Grūti (pieredzējušiem)</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="prepTime">Pagatavošanas laiks (minūtes) *</label>
+                    <input type="number" id="prepTime" name="prepTime" required min="1" placeholder="30">
+                </div>
+
+                <div class="form-group">
+                    <label for="cookTime">Ceptaves laiks (minūtes)</label>
+                    <input type="number" id="cookTime" name="cookTime" min="0" placeholder="0">
+                </div>
+
+                <div class="form-group">
+                    <label for="portions">Porciju skaits *</label>
+                    <input type="number" id="portions" name="portions" required min="1" placeholder="4">
+                </div>
+
+                <div class="form-group full-width">
+                    <label for="recipeDescription">Īss apraksts *</label>
+                    <textarea id="recipeDescription" name="description" required placeholder="Īss receptes apraksts, kas piesaistīs citus lietotājus..." rows="3"></textarea>
+                </div>
+
+                <div class="form-group full-width">
+                    <label for="recipeImage">Receptes attēla URL</label>
+                    <input type="url" id="recipeImage" name="image_url" placeholder="https://example.com/image.jpg">
+                    <small>Ieteicams: 800x600 px formāts</small>
+                </div>
+
+            <section class="ingredients-section">
+                <h2><i class="fas fa-shopping-basket"></i> Sastāvdaļas *</h2>
+                <div id="ingredientsContainer">
+                    <div class="ingredient-input">
+                        <input type="text" name="ingredients[]" placeholder="Piemēram, 400g spageti" class="ingredient-name" required>
+                        <button type="button" class="btn btn-danger remove-ingredient">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </div>
+                </div>
+                <button type="button" class="btn btn-outline" id="addIngredientBtn">
+                    <i class="fas fa-plus"></i> Pievienot sastāvdaļu
+                </button>
+            </section>
+
+            <section class="instructions-section">
+                <h2><i class="fas fa-mortar-pestle"></i> Pagatavošanas soļi *</h2>
+                <div id="instructionsContainer">
+                    <div class="instruction-input">
+                        <textarea name="instructions[]" placeholder="Aprakstiet pirmo soli detalizēti..." rows="2" required></textarea>
+                        <button type="button" class="btn btn-danger remove-instruction">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </div>
+                </div>
+                <button type="button" class="btn btn-outline" id="addInstructionBtn">
+                    <i class="fas fa-plus"></i> Pievienot soli
+                </button>
+            </section>
+
+            <div class="form-actions">
+                <button type="submit" class="btn btn-primary">
+                    <i class="fas fa-paper-plane"></i> Publicēt recepti
+                </button>
+                <button type="button" class="btn btn-outline" id="saveDraftBtn">
+                    <i class="fas fa-save"></i> Saglabāt melnrakstu
+                </button>
+                <button type="button" class="btn btn-cancel" onclick="window.history.back()">
+                    <i class="fas fa-times"></i> Atcelt
+                </button>
+            </div>
+        </form>
+    </main>
+
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>Kulinārijas grāmata</h3>
+                    <p>Labākās receptes no Latvijas un visas pasaules.</p>
+                </div>
+                <div class="footer-section">
+                    <h3>Navigācija</h3>
+                    <ul>
+                        <li><a href="index.html">Galvenā</a></li>
+                        <li><a href="add-recipe.html">Pievienot recepti</a></li>
+                        <li><a href="profile.html">Profils</a></li>
+                        <li><a href="blog.html">Blogs</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2024 Kulinārijas grāmata. Visas tiesības aizsargātas.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="api.js"></script>
+    <script src="auth.js"></script>
+    <script src="theme.js"></script>
+    <script src="main.js"></script>
+    <script>
+        // Простой скрипт только для управления динамическими полями
+        document.addEventListener('DOMContentLoaded', function() {
+            // Добавление ингредиентов
+            document.getElementById('addIngredientBtn').addEventListener('click', function() {
+                const container = document.getElementById('ingredientsContainer');
+                const newIngredient = document.createElement('div');
+                newIngredient.className = 'ingredient-input';
+                newIngredient.innerHTML = `
+                    <input type="text" name="ingredients[]" placeholder="Piemēram, 2 ēdamkarotes eļļas" required>
+                    <button type="button" class="btn btn-danger remove-ingredient">
+                        <i class="fas fa-trash"></i>
+                    </button>
+                `;
+                container.appendChild(newIngredient);
+                
+                // Добавляем обработчик удаления
+                newIngredient.querySelector('.remove-ingredient').addEventListener('click', function() {
+                    if (document.querySelectorAll('.ingredient-input').length > 1) {
+                        newIngredient.remove();
+                    } else {
+                        alert('Receptei jābūt vismaz vienai sastāvdaļai!');
+                    }
+                });
+            });
+
+            // Добавление шагов инструкции
+            document.getElementById('addInstructionBtn').addEventListener('click', function() {
+                const container = document.getElementById('instructionsContainer');
+                const newInstruction = document.createElement('div');
+                newInstruction.className = 'instruction-input';
+                newInstruction.innerHTML = `
+                    <textarea name="instructions[]" placeholder="Aprakstiet nākamo soli..." rows="2" required></textarea>
+                    <button type="button" class="btn btn-danger remove-instruction">
+                        <i class="fas fa-trash"></i>
+                    </button>
+                `;
+                container.appendChild(newInstruction);
+                
+                // Добавляем обработчик удаления
+                newInstruction.querySelector('.remove-instruction').addEventListener('click', function() {
+                    if (document.querySelectorAll('.instruction-input').length > 1) {
+                        newInstruction.remove();
+                    } else {
+                        alert('Receptei jābūt vismaz vienam solim!');
+                    }
+                });
+            });
+
+            // Обработчики удаления для первоначальных полей
+            document.querySelectorAll('.remove-ingredient').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    if (document.querySelectorAll('.ingredient-input').length > 1) {
+                        this.parentElement.remove();
+                    } else {
+                        alert('Receptei jābūt vismaz vienai sastāvdaļai!');
+                    }
+                });
+            });
+
+            document.querySelectorAll('.remove-instruction').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    if (document.querySelectorAll('.instruction-input').length > 1) {
+                        this.parentElement.remove();
+                    } else {
+                        alert('Receptei jābūt vismaz vienam solim!');
+                    }
+                });
+            });
+
+            // Сохранение черновика
+            document.getElementById('saveDraftBtn').addEventListener('click', function() {
+                const draftData = {
+                    title: document.getElementById('recipeTitle').value,
+                    category: document.getElementById('recipeCategory').value,
+                    description: document.getElementById('recipeDescription').value,
+                    savedAt: new Date().toISOString()
+                };
+                
+                localStorage.setItem('recipeDraft', JSON.stringify(draftData));
+                alert('Melnraksts saglabāts!');
+            });
+
+            // Загрузка черновика при загрузке страницы
+            const draft = JSON.parse(localStorage.getItem('recipeDraft'));
+            if (draft) {
+                if (confirm('Vai vēlaties ielādēt saglabāto melnrakstu?')) {
+                    document.getElementById('recipeTitle').value = draft.title || '';
+                    document.getElementById('recipeCategory').value = draft.category || '';
+                    document.getElementById('recipeDescription').value = draft.description || '';
+                }
+            }
+        });
+    </script>
+</body>
+</html>
