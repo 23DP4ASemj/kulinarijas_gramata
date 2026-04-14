@@ -1,0 +1,187 @@
+{
+  "info": {
+    "name": "Kulinarijas API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    { "key": "baseUrl", "value": "http://localhost:8000/api" },
+    { "key": "token", "value": "" },
+    { "key": "recipeId", "value": "1" },
+    { "key": "collectionId", "value": "1" }
+  ],
+  "item": [
+    {
+      "name": "Auth - Register",
+      "request": {
+        "method": "POST",
+        "header": [{ "key": "Content-Type", "value": "application/json" }],
+        "url": { "raw": "{{baseUrl}}/auth/register", "host": ["{{baseUrl}}"], "path": ["auth", "register"] },
+        "body": {
+          "mode": "raw",
+          "raw": "{\"name\":\"Demo User\",\"email\":\"user@demo.lv\",\"password\":\"password\",\"password_confirmation\":\"password\"}"
+        }
+      }
+    },
+    {
+      "name": "Auth - Login",
+      "request": {
+        "method": "POST",
+        "header": [{ "key": "Content-Type", "value": "application/json" }],
+        "url": { "raw": "{{baseUrl}}/auth/login", "host": ["{{baseUrl}}"], "path": ["auth", "login"] },
+        "body": { "mode": "raw", "raw": "{\"email\":\"user@demo.lv\",\"password\":\"password\"}" }
+      }
+    },
+    {
+      "name": "Auth - Me",
+      "request": {
+        "method": "GET",
+        "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+        "url": { "raw": "{{baseUrl}}/auth/me", "host": ["{{baseUrl}}"], "path": ["auth", "me"] }
+      }
+    },
+    {
+      "name": "Auth - Logout",
+      "request": {
+        "method": "POST",
+        "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+        "url": { "raw": "{{baseUrl}}/auth/logout", "host": ["{{baseUrl}}"], "path": ["auth", "logout"] }
+      }
+    },
+    {
+      "name": "Home",
+      "request": { "method": "GET", "url": { "raw": "{{baseUrl}}/home", "host": ["{{baseUrl}}"], "path": ["home"] } }
+    },
+    {
+      "name": "Categories",
+      "request": { "method": "GET", "url": { "raw": "{{baseUrl}}/categories", "host": ["{{baseUrl}}"], "path": ["categories"] } }
+    },
+    {
+      "name": "Ingredients",
+      "request": { "method": "GET", "url": { "raw": "{{baseUrl}}/ingredients", "host": ["{{baseUrl}}"], "path": ["ingredients"] } }
+    },
+    {
+      "name": "Recipes - List",
+      "request": {
+        "method": "GET",
+        "url": {
+          "raw": "{{baseUrl}}/recipes?per_page=9&page=1",
+          "host": ["{{baseUrl}}"],
+          "path": ["recipes"],
+          "query": [
+            { "key": "per_page", "value": "9" },
+            { "key": "page", "value": "1" }
+          ]
+        }
+      }
+    },
+    {
+      "name": "Recipes - Detail",
+      "request": {
+        "method": "GET",
+        "url": { "raw": "{{baseUrl}}/recipes/{{recipeId}}", "host": ["{{baseUrl}}"], "path": ["recipes", "{{recipeId}}"] }
+      }
+    },
+    {
+      "name": "Recipes - Create",
+      "request": {
+        "method": "POST",
+        "header": [
+          { "key": "Authorization", "value": "Bearer {{token}}" },
+          { "key": "Content-Type", "value": "application/json" }
+        ],
+        "url": { "raw": "{{baseUrl}}/recipes", "host": ["{{baseUrl}}"], "path": ["recipes"] },
+        "body": {
+          "mode": "raw",
+          "raw": "{\"title\":\"My Recipe\",\"description\":\"Tasty\",\"category_id\":1,\"prep_time_minutes\":15,\"difficulty\":\"Easy\",\"ingredients\":[{\"name\":\"Salt\",\"amount\":\"1\",\"unit\":\"tsp\"}]}"
+        }
+      }
+    },
+    {
+      "name": "Recipes - Update",
+      "request": {
+        "method": "PATCH",
+        "header": [
+          { "key": "Authorization", "value": "Bearer {{token}}" },
+          { "key": "Content-Type", "value": "application/json" }
+        ],
+        "url": { "raw": "{{baseUrl}}/recipes/{{recipeId}}", "host": ["{{baseUrl}}"], "path": ["recipes", "{{recipeId}}"] },
+        "body": { "mode": "raw", "raw": "{\"title\":\"Updated Title\"}" }
+      }
+    },
+    {
+      "name": "Recipes - Delete",
+      "request": {
+        "method": "DELETE",
+        "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+        "url": { "raw": "{{baseUrl}}/recipes/{{recipeId}}", "host": ["{{baseUrl}}"], "path": ["recipes", "{{recipeId}}"] }
+      }
+    },
+    {
+      "name": "Comments - List",
+      "request": {
+        "method": "GET",
+        "url": { "raw": "{{baseUrl}}/recipes/{{recipeId}}/comments", "host": ["{{baseUrl}}"], "path": ["recipes", "{{recipeId}}", "comments"] }
+      }
+    },
+    {
+      "name": "Comments - Create",
+      "request": {
+        "method": "POST",
+        "header": [
+          { "key": "Authorization", "value": "Bearer {{token}}" },
+          { "key": "Content-Type", "value": "application/json" }
+        ],
+        "url": { "raw": "{{baseUrl}}/recipes/{{recipeId}}/comments", "host": ["{{baseUrl}}"], "path": ["recipes", "{{recipeId}}", "comments"] },
+        "body": { "mode": "raw", "raw": "{\"text\":\"Great recipe!\"}" }
+      }
+    },
+    {
+      "name": "Rating - Set",
+      "request": {
+        "method": "PUT",
+        "header": [
+          { "key": "Authorization", "value": "Bearer {{token}}" },
+          { "key": "Content-Type", "value": "application/json" }
+        ],
+        "url": { "raw": "{{baseUrl}}/recipes/{{recipeId}}/rating", "host": ["{{baseUrl}}"], "path": ["recipes", "{{recipeId}}", "rating"] },
+        "body": { "mode": "raw", "raw": "{\"value\":5}" }
+      }
+    },
+    {
+      "name": "Favorite - Toggle",
+      "request": {
+        "method": "POST",
+        "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+        "url": { "raw": "{{baseUrl}}/recipes/{{recipeId}}/favorite", "host": ["{{baseUrl}}"], "path": ["recipes", "{{recipeId}}", "favorite"] }
+      }
+    },
+    {
+      "name": "Collections - List",
+      "request": {
+        "method": "GET",
+        "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+        "url": { "raw": "{{baseUrl}}/collections", "host": ["{{baseUrl}}"], "path": ["collections"] }
+      }
+    },
+    {
+      "name": "Collections - Create",
+      "request": {
+        "method": "POST",
+        "header": [
+          { "key": "Authorization", "value": "Bearer {{token}}" },
+          { "key": "Content-Type", "value": "application/json" }
+        ],
+        "url": { "raw": "{{baseUrl}}/collections", "host": ["{{baseUrl}}"], "path": ["collections"] },
+        "body": { "mode": "raw", "raw": "{\"name\":\"My Favorites\"}" }
+      }
+    },
+    {
+      "name": "Admin - Analytics",
+      "request": {
+        "method": "GET",
+        "header": [{ "key": "Authorization", "value": "Bearer {{token}}" }],
+        "url": { "raw": "{{baseUrl}}/admin/analytics", "host": ["{{baseUrl}}"], "path": ["admin", "analytics"] }
+      }
+    }
+  ]
+}

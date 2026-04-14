@@ -1,0 +1,89 @@
+:root {
+  color-scheme: light;
+}
+
+body {
+  background: #F8F6F3;
+  color: #1F1F1F;
+}
+
+.v-theme--light {
+  color-scheme: light;
+  --pg-bg: #F8F6F3;
+  --pg-surface: #FFFFFF;
+  --pg-surface-soft: #F2EEE9;
+  --pg-primary: #E67E22;
+  --pg-primary-hover: #D96C10;
+  --pg-text-main: #1F1F1F;
+  --pg-text-secondary: #6B6B6B;
+  --pg-border: rgba(0, 0, 0, 0.05);
+  --pg-shadow: 0 8px 30px rgba(0, 0, 0, 0.04);
+  --pg-shadow-hover: 0 15px 40px rgba(0, 0, 0, 0.08);
+  --kg-footer-bg: #F0ECE7;
+  --kg-footer-border: rgba(0, 0, 0, 0.05);
+}
+
+.v-application.v-theme--light {
+  background: transparent;
+}
+
+.v-theme--light .v-main {
+  background: transparent !important;
+}
+
+.v-theme--light .v-app-bar {
+  height: var(--kg-app-bar-height) !important;
+  background: transparent !important;
+  border-bottom: 1px solid var(--pg-border);
+  box-shadow: none !important;
+}
+
+.v-theme--light .v-card,
+.v-theme--light .v-sheet {
+  background: rgba(255, 255, 255, 0.82) !important;
+  border: 1px solid var(--pg-border);
+  border-radius: 16px;
+  box-shadow: var(--pg-shadow);
+  backdrop-filter: blur(10px);
+}
+
+.v-theme--light .v-card:hover,
+.v-theme--light .v-sheet:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--pg-shadow-hover);
+}
+
+.v-theme--light .v-btn--variant-flat,
+.v-theme--light .v-btn--variant-elevated {
+  background: var(--pg-primary);
+}
+
+.v-theme--light .v-btn--variant-flat:hover,
+.v-theme--light .v-btn--variant-elevated:hover {
+  background: var(--pg-primary-hover);
+}
+
+.v-theme--light .v-btn--variant-tonal {
+  background: var(--pg-surface-soft);
+}
+
+.v-theme--light .v-chip {
+  background: var(--pg-surface-soft);
+  border: 1px solid var(--pg-border);
+}
+
+.v-theme--light .text-medium-emphasis,
+.v-theme--light .text-disabled {
+  color: var(--pg-text-secondary) !important;
+}
+
+.v-theme--light .v-input .v-field {
+  border: 1px solid var(--pg-border);
+  border-radius: 16px;
+  background: #FFFFFF;
+}
+
+.v-theme--light .v-input .v-field--focused {
+  border-color: rgba(230, 126, 34, 0.55);
+  box-shadow: 0 0 0 3px rgba(230, 126, 34, 0.14);
+}

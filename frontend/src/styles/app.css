@@ -1,0 +1,99 @@
+:root {
+  --kg-app-bar-height: 108px;
+  --kg-main-offset: 20px;
+}
+
+@media (max-width: 960px) {
+  :root {
+    --kg-app-bar-height: 92px;
+    --kg-main-offset: 16px;
+  }
+}
+
+html,
+body,
+#app {
+  min-height: 100%;
+}
+
+body {
+  margin: 0;
+  font-family: 'Inter', 'Segoe UI', Roboto, sans-serif;
+  background-color: #F8F6F3;
+  background-image: url('/assets/body.png');
+  background-size: contain;
+  background-repeat: repeat;
+  background-position: center top;
+  background-attachment: scroll;
+  position: relative;
+}
+
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background: rgba(248, 246, 243, 0.16);
+  pointer-events: none;
+  z-index: 0;
+}
+
+.v-main {
+  min-height: calc(100vh - var(--kg-app-bar-height));
+  background: transparent !important;
+  position: relative;
+  z-index: 1;
+}
+
+body.dark-theme::before {
+  background: rgba(23, 21, 19, 0.18);
+}
+
+.v-btn,
+.v-chip,
+.v-list-item,
+.v-card {
+  transition: all 0.25s ease;
+}
+
+.v-btn {
+  text-transform: none;
+  border-radius: 999px;
+  letter-spacing: 0;
+  font-weight: 600;
+}
+
+.v-chip {
+  border-radius: 999px;
+}
+
+.soft-section {
+  margin-bottom: 80px;
+}
+
+.soft-card {
+  border-radius: 16px !important;
+  padding: 24px;
+}
+
+.soft-container {
+  border-radius: 20px !important;
+  padding: 24px;
+}
+
+.top-bar {
+  background: rgba(255, 255, 255, 0.65) !important;
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  box-shadow: none !important;
+}
+
+body.dark-theme .top-bar {
+  background: rgba(32, 28, 25, 0.58) !important;
+}
+
+#app,
+.v-application,
+.app-shell {
+  position: relative;
+  z-index: 1;
+}
