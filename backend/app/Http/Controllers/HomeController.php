@@ -15,7 +15,7 @@ class HomeController extends Controller
         $topLimit = (int) $request->query('top_limit', 5);
         $topLimit = max(1, min(10, $topLimit));
 
-        $topRecipes = Recipe::listQuery($viewerId)
+        $topRecipes = Recipe::query()
             ->orderByRaw('(COALESCE(ratings_avg_value, 0) + (ratings_count * ?)) desc', [$weight])
             ->limit($topLimit)
             ->get();
