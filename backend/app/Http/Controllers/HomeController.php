@@ -14,9 +14,12 @@ class HomeController extends Controller
     public function index(Request $request)
 {
     try {
+        $topRecipes = \App\Models\Recipe::query()->limit(5)->get();
+
         return response()->json([
             'ok' => true,
-            'step' => 'controller-start',
+            'step' => 'recipes-query',
+            'count' => $topRecipes->count(),
         ]);
     } catch (\Throwable $e) {
         return response()->json([
