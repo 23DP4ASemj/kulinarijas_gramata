@@ -86,30 +86,27 @@ class RecipeService
     }
 
     public function getSimilar(int $id, ?int $viewerId = null, int $limit = 6)
-    {
-        $recipe = Recipe::with('ingredients:id')->findOrFail($id);
-        $ingredientIds = $recipe->ingredients->pluck('id')->all();
-        $limit = max(1, min(12, $limit));
+{
+    $recipe = Recipe::findOrFail($id);
+    $limit = max(1, min(12, $limit));
 
-        $query = Recipe::listQuery($viewerId)
-            ->where('recipes.id', '!=', $recipe->id);
+    $query = Recipe::query()
+        ->with(['category:id,name', 'author:id,name'])
+        ->withAvg('ratings', 'value')
+        ->withCount('ratings')
+        ->withCount('favorites')
+        ->where('recipes.id', '!=', $recipe->id);
 
-        if ($recipe->category_id) {
-            $query->where('recipes.category_id', $recipe->category_id);
-        }
-
-        if (!empty($ingredientIds)) {
-            $query->withCount(['ingredients as overlap_ingredients_count' => function ($inner) use ($ingredientIds) {
-                $inner->whereIn('ingredients.id', $ingredientIds);
-            }])->orderByDesc('overlap_ingredients_count');
-        }
-
-        return $query
-            ->orderByDesc(DB::raw('COALESCE(ratings_avg_value, 0)'))
-            ->orderByDesc('recipes.created_at')
-            ->limit($limit)
-            ->get();
+    if ($recipe->category_id) {
+        $query->where('recipes.category_id', $recipe->category_id);
     }
+
+    return $query
+        ->orderByDesc(DB::raw('COALESCE(ratings_avg_value, 0)'))
+        ->orderByDesc('recipes.created_at')
+        ->limit($limit)
+        ->get();
+}
 
     public function create(User $user, array $data): Recipe
     {
