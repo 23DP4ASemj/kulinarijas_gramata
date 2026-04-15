@@ -66,21 +66,22 @@ class Recipe extends Model
     }
 
     public static function listQuery(?int $viewerId = null)
-    {
-        $query = static::query()
-            ->with(['category:id,name', 'author:id,name'])
-            ->withAvg('ratings', 'value')
-            ->withCount('ratings')
-            ->withCount('favorites');
+{
+    $query = static::query()
+        ->with(['category:id,name', 'author:id,name'])
+        ->withAvg('ratings', 'value')
+        ->withCount('ratings')
+        ->withCount('favorites');
 
-        if ($viewerId) {
-            $query->withExists(['favorites as is_favorited_by_me' => function ($inner) use ($viewerId) {
-                $inner->where('user_id', $viewerId);
-            }]);
-        }
+    // временно отключаем это (ломает Railway)
+    // if ($viewerId) {
+    //     $query->withExists(['favorites as is_favorited_by_me' => function ($inner) use ($viewerId) {
+    //         $inner->where('user_id', $viewerId);
+    //     }]);
+    // }
 
-        return $query;
-    }
+    return $query;
+}
 
     public function toListArray(): array
     {
