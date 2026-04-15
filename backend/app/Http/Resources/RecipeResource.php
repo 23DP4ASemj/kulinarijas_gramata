@@ -4,7 +4,6 @@ namespace App\Http\Resources;
 
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
-use Illuminate\Support\Facades\Storage;
 
 class RecipeResource extends JsonResource
 {
@@ -14,8 +13,14 @@ class RecipeResource extends JsonResource
             'id' => (int) $this->id,
             'title' => $this->title,
             'description' => $this->description,
-            'category' => $this->whenLoaded('category', fn () => new CategoryResource($this->category)),
-            'author' => $this->whenLoaded('author', fn () => new UserResource($this->author)),
+            'category' => $this->category ? [
+                'id' => (int) $this->category->id,
+                'name' => $this->category->name,
+            ] : null,
+            'author' => $this->author ? [
+                'id' => (int) $this->author->id,
+                'name' => $this->author->name,
+            ] : null,
             'ingredients' => IngredientResource::collection($this->whenLoaded('ingredients')),
             'steps' => $this->whenLoaded(
                 'steps',
@@ -34,7 +39,7 @@ class RecipeResource extends JsonResource
             'prep_time_minutes' => $this->prep_time_minutes !== null ? (int) $this->prep_time_minutes : null,
             'difficulty' => $this->difficulty,
             'quantity' => $this->quantity,
-            'image_url' => $this->image_url ?: ($this->image_path ? url(Storage::disk('public')->url($this->image_path)) : null),
+            'image_url' => $this->image_url,
             'image_input_url' => $this->getRawOriginal('image_url'),
             'image_source' => $this->image_path ? 'file' : ($this->getRawOriginal('image_url') ? 'url' : null),
             'favorites_count' => (int) ($this->favorites_count ?? 0),

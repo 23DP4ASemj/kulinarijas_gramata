@@ -1,12 +1,30 @@
 import axios from 'axios'
 import { clearStoredAuth, getStoredToken } from './utils/authStorage'
 
-const runtimeDefaultApiUrl = typeof window !== 'undefined'
-  ? `${window.location.protocol}//${window.location.hostname}:8000/api`
-  : 'http://localhost:8000/api'
+function normalizeBaseUrl(url) {
+  return String(url || '').trim().replace(/\/+$/, '')
+}
+
+function resolveApiBaseUrl() {
+  const envApiUrl = normalizeBaseUrl(import.meta.env.VITE_API_URL)
+  if (envApiUrl) {
+    return envApiUrl
+  }
+
+  if (typeof window === 'undefined') {
+    return 'http://localhost:8000/api'
+  }
+
+  const hostname = window.location.hostname
+  if (hostname === 'localhost' || hostname === '127.0.0.1') {
+    return `${window.location.protocol}//${hostname}:8000/api`
+  }
+
+  return '/api'
+}
 
 export const api = axios.create({
-  baseURL: import.meta.env.VITE_API_URL || runtimeDefaultApiUrl,
+  baseURL: resolveApiBaseUrl(),
   headers: {
     Accept: 'application/json',
   },

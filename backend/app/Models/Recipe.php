@@ -2,10 +2,10 @@
 
 namespace App\Models;
 
+use App\Support\MediaUrl;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use Illuminate\Support\Facades\Storage;
 
 class Recipe extends Model
 {
@@ -65,23 +65,29 @@ class Recipe extends Model
         return $this->hasMany(RecipeStep::class)->orderBy('step_number');
     }
 
+    public function getImageUrlAttribute(?string $value): ?string
+    {
+        return MediaUrl::publicDisk($value, $this->image_path);
+    }
+
     public static function listQuery(?int $viewerId = null)
-{
-    $query = static::query()
-        ->with(['category:id,name', 'author:id,name'])
-        ->withAvg('ratings', 'value')
-        ->withCount('ratings')
-        ->withCount('favorites');
+    {
+        $query = static::query()
+            ->with(['category:id,name', 'author:id,name'])
+            ->withAvg('ratings', 'value')
+            ->withCount('ratings')
+            ->withCount('favorites');
 
-    // временно отключаем это (ломает Railway)
-    // if ($viewerId) {
-    //     $query->withExists(['favorites as is_favorited_by_me' => function ($inner) use ($viewerId) {
-    //         $inner->where('user_id', $viewerId);
-    //     }]);
-    // }
+        if ($viewerId) {
+            $query->withCount([
+                'favorites as is_favorited_by_me' => function ($inner) use ($viewerId) {
+                    $inner->where('user_id', $viewerId);
+                },
+            ]);
+        }
 
-    return $query;
-}
+        return $query;
+    }
 
     public function toListArray(): array
     {
@@ -102,7 +108,7 @@ class Recipe extends Model
             'prep_time_minutes' => $this->prep_time_minutes !== null ? (int) $this->prep_time_minutes : null,
             'difficulty' => $this->difficulty,
             'quantity' => $this->quantity,
-            'image_url' => $this->image_url ?: ($this->image_path ? url(Storage::disk('public')->url($this->image_path)) : null),
+            'image_url' => $this->image_url,
             'favorites_count' => (int) ($this->favorites_count ?? 0),
             'is_favorited_by_me' => (bool) ($this->is_favorited_by_me ?? false),
         ];

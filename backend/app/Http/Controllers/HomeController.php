@@ -13,47 +13,114 @@ class HomeController extends Controller
 {
     public function index(Request $request)
     {
+        $viewerId = auth('sanctum')->id();
         $topLimit = (int) $request->query('top_limit', 5);
+        $recipesLimit = (int) $request->query('recipes_limit', 8);
         $topLimit = max(1, min(10, $topLimit));
+        $recipesLimit = max(1, min(12, $recipesLimit));
 
-        $topRecipes = Recipe::query()
-            ->with(['category:id,name', 'author:id,name'])
-            ->withAvg('ratings', 'value')
-            ->withCount('ratings')
-            ->withCount('favorites')
-            ->latest()
+        $topRecipes = Recipe::listQuery($viewerId)
+            ->orderByDesc(DB::raw('COALESCE(ratings_avg_value, 0)'))
+            ->orderByDesc('favorites_count')
+            ->orderByDesc('ratings_count')
+            ->orderByDesc('recipes.created_at')
             ->limit($topLimit)
             ->get();
 
-        $topAuthors = User::query()
-            ->leftJoin('recipes', 'users.id', '=', 'recipes.user_id')
+        $latestRecipes = Recipe::listQuery($viewerId)
+            ->orderByDesc('recipes.created_at')
+            ->limit($recipesLimit)
+            ->get();
+
+        $authorStats = DB::table('recipes')
+            ->leftJoin('ratings', 'ratings.recipe_id', '=', 'recipes.id')
+            ->select(
+                'recipes.user_id',
+                DB::raw('COUNT(DISTINCT recipes.id) as recipes_count'),
+                DB::raw('COALESCE(AVG(ratings.value), 0) as avg_rating')
+            )
+            ->groupBy('recipes.user_id');
+
+        $followerStats = DB::table('user_follows')
+            ->select(
+                'following_id',
+                DB::raw('COUNT(*) as followers_count')
+            )
+            ->groupBy('following_id');
+
+        $followingIds = $viewerId
+            ? DB::table('user_follows')
+                ->where('follower_id', $viewerId)
+                ->pluck('following_id')
+                ->map(fn ($id) => (int) $id)
+                ->all()
+            : [];
+
+        $authorPool = User::query()
+            ->joinSub($authorStats, 'author_stats', function ($join) {
+                $join->on('author_stats.user_id', '=', 'users.id');
+            })
+            ->leftJoinSub($followerStats, 'follower_stats', function ($join) {
+                $join->on('follower_stats.following_id', '=', 'users.id');
+            })
             ->select(
                 'users.id',
                 'users.name',
-                DB::raw('COUNT(recipes.id) as recipes_count')
+                DB::raw('author_stats.recipes_count as recipes_count'),
+                DB::raw('author_stats.avg_rating as avg_rating'),
+                DB::raw('COALESCE(follower_stats.followers_count, 0) as followers_count')
             )
-            ->groupBy('users.id', 'users.name')
+            ->orderByDesc('avg_rating')
             ->orderByDesc('recipes_count')
-            ->limit($topLimit)
+            ->orderByDesc('followers_count')
+            ->orderBy('users.name')
+            ->limit(max($topLimit, 12))
             ->get()
             ->map(function ($author) {
                 return [
                     'id' => (int) $author->id,
                     'name' => $author->name,
                     'recipes_count' => (int) $author->recipes_count,
-                    'avg_rating' => 0,
-                    'followers_count' => 0,
-                    'is_following' => false,
-                    'is_me' => false,
+                    'avg_rating' => round((float) ($author->avg_rating ?? 0), 1),
+                    'followers_count' => (int) ($author->followers_count ?? 0),
                 ];
             })
+            ->values();
+
+        $decorateAuthor = function (array $author) use ($viewerId, $followingIds): array {
+            $authorId = (int) $author['id'];
+
+            return [
+                ...$author,
+                'is_following' => in_array($authorId, $followingIds, true),
+                'is_me' => $viewerId ? $authorId === (int) $viewerId : false,
+            ];
+        };
+
+        $topAuthors = $authorPool
+            ->map($decorateAuthor)
+            ->take($topLimit)
+            ->values();
+
+        $recommendedAuthors = $authorPool
+            ->reject(function (array $author) use ($viewerId, $followingIds) {
+                $authorId = (int) $author['id'];
+
+                if ($viewerId && $authorId === (int) $viewerId) {
+                    return true;
+                }
+
+                return in_array($authorId, $followingIds, true);
+            })
+            ->map($decorateAuthor)
+            ->take(6)
             ->values();
 
         return response()->json([
             'top_recipes' => RecipeListResource::collection($topRecipes)->resolve(),
             'top_authors' => $topAuthors,
-            'recommended_authors' => $topAuthors->take(6)->values(),
-            'recipes' => [],
+            'recommended_authors' => $recommendedAuthors,
+            'recipes' => RecipeListResource::collection($latestRecipes)->resolve(),
             'stats' => [
                 'recipes_count' => Recipe::count(),
                 'authors_count' => User::count(),

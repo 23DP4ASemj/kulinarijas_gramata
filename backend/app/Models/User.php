@@ -2,12 +2,12 @@
 
 namespace App\Models;
 
+use App\Support\MediaUrl;
 use Illuminate\Auth\MustVerifyEmail as MustVerifyEmailTrait;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
-use Illuminate\Support\Facades\Storage;
 use Laravel\Sanctum\HasApiTokens;
 
 class User extends Authenticatable implements MustVerifyEmail
@@ -82,7 +82,10 @@ class User extends Authenticatable implements MustVerifyEmail
 
     public function scopeWithEffectiveRoleFlags($query)
     {
-        return $query->withExists(['recipes as has_recipes', 'blogPosts as has_blog_posts']);
+        return $query->withCount([
+            'recipes as published_recipes_count',
+            'blogPosts as published_blog_posts_count',
+        ]);
     }
 
     public function getAssignedRole(): string
@@ -92,12 +95,12 @@ class User extends Authenticatable implements MustVerifyEmail
 
     public function hasPublishedContent(): bool
     {
-        $hasRecipes = array_key_exists('has_recipes', $this->attributes)
-            ? (bool) $this->attributes['has_recipes']
+        $hasRecipes = array_key_exists('published_recipes_count', $this->attributes)
+            ? (int) $this->attributes['published_recipes_count'] > 0
             : ($this->relationLoaded('recipes') ? $this->recipes->isNotEmpty() : $this->recipes()->exists());
 
-        $hasBlogPosts = array_key_exists('has_blog_posts', $this->attributes)
-            ? (bool) $this->attributes['has_blog_posts']
+        $hasBlogPosts = array_key_exists('published_blog_posts_count', $this->attributes)
+            ? (int) $this->attributes['published_blog_posts_count'] > 0
             : ($this->relationLoaded('blogPosts') ? $this->blogPosts->isNotEmpty() : $this->blogPosts()->exists());
 
         return $hasRecipes || $hasBlogPosts;
@@ -145,14 +148,6 @@ class User extends Authenticatable implements MustVerifyEmail
 
     public function getAvatarUrlAttribute(?string $value)
     {
-        if ($value) {
-            return $value;
-        }
-
-        if ($this->avatar_path) {
-            return url(Storage::disk('public')->url($this->avatar_path));
-        }
-
-        return null;
+        return MediaUrl::publicDisk($value, $this->avatar_path);
     }
 }

@@ -21,17 +21,7 @@ class RecipeService
         $perPage = max(1, min(50, $perPage));
         $page = max(1, $page);
 
-        $query = Recipe::query()
-            ->with(['category:id,name', 'author:id,name'])
-            ->withAvg('ratings', 'value')
-            ->withCount('ratings')
-            ->withCount('favorites');
-
-        if ($viewerId) {
-            $query->withExists(['favorites as is_favorited_by_me' => function ($inner) use ($viewerId) {
-                $inner->where('user_id', $viewerId);
-            }]);
-        }
+        $query = Recipe::listQuery($viewerId);
 
         $q = trim((string) $request->query('q', ''));
         if ($q !== '') {
