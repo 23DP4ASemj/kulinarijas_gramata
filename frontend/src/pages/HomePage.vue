@@ -451,6 +451,14 @@ onBeforeUnmount(() => {
   background: linear-gradient(135deg, rgba(253, 246, 238, 0.64), rgba(247, 233, 218, 0.5));
   backdrop-filter: blur(10px);
 }
+:global(body.dark-theme) section#ievads.hero-section.soft-section {
+  border-radius: 20px;
+  padding: 44px;
+  border: 1px solid rgba(255, 255, 255, 0.05) !important;
+  background: rgba(22, 18, 16, 0.28) !important;
+  backdrop-filter: blur(6px) !important;
+  box-shadow: none !important;
+}
 
 .hero-content {
   max-width: 760px;
@@ -539,34 +547,15 @@ onBeforeUnmount(() => {
   padding-bottom: 8px;
 }
 
-:global(body.dark-theme) section#ievads.hero-section.soft-section {
-  background: transparent !important;
-  background-image: none !important;
-  border: none !important;
-  box-shadow: none !important;
-  backdrop-filter: none !important;
-}
-
-:global(body.dark-theme) section#ievads.hero-section.soft-section .hero-content h1,
-:global(body.dark-theme) section#ievads.hero-section.soft-section .hero-content .text-h3 {
+:global(body.dark-theme) section#ievads.hero-section.soft-section h1,
+:global(body.dark-theme) section#ievads.hero-section.soft-section .text-h3 {
   color: #fff7ef !important;
 }
 
-:global(body.dark-theme) section#ievads.hero-section.soft-section .hero-content p,
-:global(body.dark-theme) section#ievads.hero-section.soft-section .hero-content .text-subtitle-1,
-:global(body.dark-theme) section#ievads.hero-section.soft-section .hero-content .text-medium-emphasis {
+:global(body.dark-theme) section#ievads.hero-section.soft-section p,
+:global(body.dark-theme) section#ievads.hero-section.soft-section .text-subtitle-1,
+:global(body.dark-theme) section#ievads.hero-section.soft-section .text-medium-emphasis {
   color: rgba(255, 245, 235, 0.82) !important;
-}
-
-:global(body.dark-theme) .latest-container,
-:global(body.dark-theme) .top-container,
-:global(body.dark-theme) .metric-card,
-:global(body.dark-theme) .list-shell,
-:global(body.dark-theme) .action-card,
-:global(body.dark-theme) .platform-card {
-  background: rgba(24, 20, 18, 0.72) !important;
-  border-color: rgba(255, 255, 255, 0.06) !important;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.18) !important;
 }
 
 @media (max-width: 960px) {
