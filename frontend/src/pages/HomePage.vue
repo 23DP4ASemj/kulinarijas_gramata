@@ -540,20 +540,16 @@ onBeforeUnmount(() => {
 }
 
 :global(body.dark-theme) .hero-section {
-  background:
-    linear-gradient(135deg, rgba(230, 126, 34, 0.16), rgba(75, 62, 54, 0.34)),
-    rgba(29, 25, 22, 0.74);
-  border-color: rgba(255, 255, 255, 0.08);
-  box-shadow: 0 18px 44px rgba(0, 0, 0, 0.24);
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+  backdrop-filter: none !important;
 }
 
 :global(body.dark-theme) .hero-section h1,
-:global(body.dark-theme) .hero-section .text-subtitle-1 {
-  color: rgba(255, 248, 241, 0.96) !important;
-}
-
+:global(body.dark-theme) .hero-section .text-subtitle-1,
 :global(body.dark-theme) .hero-section .text-medium-emphasis {
-  color: rgba(255, 244, 236, 0.78) !important;
+  color: rgba(255, 248, 241, 0.96) !important;
 }
 
 :global(body.dark-theme) .latest-container,
@@ -562,8 +558,9 @@ onBeforeUnmount(() => {
 :global(body.dark-theme) .list-shell,
 :global(body.dark-theme) .action-card,
 :global(body.dark-theme) .platform-card {
-  background: rgba(36, 32, 29, 0.58) !important;
-  border-color: rgba(255, 255, 255, 0.08);
+  background: rgba(24, 20, 18, 0.72) !important;
+  border-color: rgba(255, 255, 255, 0.06) !important;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.18);
 }
 
 @media (max-width: 960px) {
