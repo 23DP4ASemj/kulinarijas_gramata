@@ -11,6 +11,43 @@
     </section>
 
     <section class="soft-section">
+      <v-card rounded="xl" class="soft-container latest-container" variant="flat">
+        <div class="d-flex align-end justify-space-between flex-wrap ga-3 mb-6">
+          <div>
+            <h2 class="text-h5 mb-1">Pēdējās publicētās receptes</h2>
+            <p class="text-body-2 text-medium-emphasis mb-0">Jaunākās receptes no platformas kopienas.</p>
+          </div>
+          <v-btn variant="tonal" color="primary" class="pill-btn" :to="{ name: 'recipes' }">Skatīt visas</v-btn>
+        </div>
+
+        <v-row v-if="loadingLatestRecipes" class="gy-4">
+          <v-col v-for="item in latestRecipeSkeletons" :key="item" cols="12" md="6" xl="4">
+            <v-skeleton-loader type="image, article, actions" class="rounded-xl latest-skeleton" />
+          </v-col>
+        </v-row>
+
+        <v-alert v-else-if="latestRecipesError" type="error" variant="tonal" class="mb-0">
+          {{ latestRecipesError }}
+        </v-alert>
+
+        <v-alert v-else-if="!latestRecipes.length" type="info" variant="tonal" class="mb-0">
+          Jaunākās receptes pašlaik nav pieejamas.
+        </v-alert>
+
+        <v-row v-else class="gy-4">
+          <v-col v-for="recipe in latestRecipes" :key="recipe.id" cols="12" md="6" xl="4">
+            <RecipeCard
+              :recipe="recipe"
+              :can-favorite="auth.isAuthenticated"
+              @open="openRecipe"
+              @toggle-favorite="toggleFavorite"
+            />
+          </v-col>
+        </v-row>
+      </v-card>
+    </section>
+
+    <section class="soft-section">
       <v-card rounded="xl" class="soft-container top-container">
         <div class="d-flex flex-wrap align-center justify-space-between ga-3 mb-6">
           <div>
@@ -196,9 +233,12 @@ import { computed, onBeforeUnmount, onMounted, reactive, ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { api } from '../api'
 import { useAuthStore } from '../stores/auth'
+import { useFavoritesStore } from '../stores/favorites'
+import RecipeCard from '../components/RecipeCard.vue'
 
 const router = useRouter()
 const auth = useAuthStore()
+const favoritesStore = useFavoritesStore()
 
 const quickActions = [
   {
@@ -242,7 +282,11 @@ const loadingTop = ref(false)
 const topError = ref('')
 const topRecipes = ref([])
 const topAuthors = ref([])
+const latestRecipes = ref([])
+const loadingLatestRecipes = ref(false)
+const latestRecipesError = ref('')
 const lastUpdatedAt = ref(null)
+const latestRecipeSkeletons = [1, 2, 3, 4, 5, 6]
 let autoRefreshTimer = null
 
 const topStats = reactive({
@@ -322,8 +366,49 @@ async function fetchHomeStats(manual = false) {
   }
 }
 
-function openRecipe(recipeId) {
+async function fetchLatestRecipes() {
+  loadingLatestRecipes.value = true
+  latestRecipesError.value = ''
+
+  try {
+    const res = await api.get('/recipes', {
+      params: {
+        sort: 'newest',
+        per_page: 6,
+        page: 1,
+      },
+    })
+
+    latestRecipes.value = Array.isArray(res.data?.data) ? res.data.data.slice(0, 6) : []
+  } catch {
+    latestRecipes.value = []
+    latestRecipesError.value = 'Neizdevās ielādēt jaunākās receptes.'
+  } finally {
+    loadingLatestRecipes.value = false
+  }
+}
+
+function openRecipe(recipeOrId) {
+  const recipeId = typeof recipeOrId === 'object' ? recipeOrId?.id : recipeOrId
+  if (!recipeId) {
+    return
+  }
+
   router.push({ name: 'recipeDetail', params: { id: recipeId } })
+}
+
+async function toggleFavorite(recipe) {
+  if (!auth.isAuthenticated) {
+    router.push({ name: 'login' })
+    return
+  }
+
+  const payload = recipe.is_favorited_by_me
+    ? await favoritesStore.unfavorite(recipe.id)
+    : await favoritesStore.favorite(recipe.id)
+
+  recipe.is_favorited_by_me = payload.is_favorited_by_me
+  recipe.favorites_count = payload.favorites_count
 }
 
 function openAuthor(authorId) {
@@ -337,6 +422,7 @@ function openAuthor(authorId) {
 
 onMounted(() => {
   fetchHomeStats(false)
+  fetchLatestRecipes()
   autoRefreshTimer = setInterval(() => {
     fetchHomeStats(false)
   }, 60000)
@@ -378,6 +464,15 @@ onBeforeUnmount(() => {
 .top-container {
   background: rgba(255, 255, 255, 0.66);
   backdrop-filter: blur(10px);
+}
+
+.latest-container {
+  background: rgba(255, 255, 255, 0.66) !important;
+  backdrop-filter: blur(10px);
+}
+
+.latest-skeleton {
+  background: transparent;
 }
 
 .metric-card {
@@ -444,16 +539,19 @@ onBeforeUnmount(() => {
   padding-bottom: 8px;
 }
 
-:deep(.v-theme--dark) .hero-section {
+:global(body.dark-theme) .hero-section {
   background: linear-gradient(135deg, rgba(230, 126, 34, 0.18), rgba(55, 48, 44, 0.58));
+  border-color: rgba(255, 255, 255, 0.08);
 }
 
-:deep(.v-theme--dark) .top-container,
-:deep(.v-theme--dark) .metric-card,
-:deep(.v-theme--dark) .list-shell,
-:deep(.v-theme--dark) .action-card,
-:deep(.v-theme--dark) .platform-card {
+:global(body.dark-theme) .latest-container,
+:global(body.dark-theme) .top-container,
+:global(body.dark-theme) .metric-card,
+:global(body.dark-theme) .list-shell,
+:global(body.dark-theme) .action-card,
+:global(body.dark-theme) .platform-card {
   background: rgba(36, 32, 29, 0.58) !important;
+  border-color: rgba(255, 255, 255, 0.08);
 }
 
 @media (max-width: 960px) {
