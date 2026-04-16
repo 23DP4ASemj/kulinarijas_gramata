@@ -548,11 +548,12 @@ onBeforeUnmount(() => {
 }
 
 :global(body.dark-theme) .hero-section h1,
-:global(body.dark-theme) .hero-section .text-subtitle-1 {
+:global(body.dark-theme) .hero-section h2,
+:global(body.dark-theme) .hero-section h3 {
   color: rgba(255, 248, 241, 0.96) !important;
 }
 
-:global(body.dark-theme) .hero-section .text-medium-emphasis {
+:global(body.dark-theme) .hero-section p {
   color: rgba(255, 244, 236, 0.78) !important;
 }
 
