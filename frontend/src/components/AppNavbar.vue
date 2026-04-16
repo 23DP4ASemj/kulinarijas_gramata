@@ -206,12 +206,13 @@ async function logoutAndGoHome(closeDrawer = false) {
   align-items: center;
   text-decoration: none;
   padding: 6px 0;
+  min-height: calc(var(--kg-logo-height) + 8px);
 }
 
 .logo-img {
   display: block;
   width: auto;
-  height: 64px;
+  height: min(var(--kg-logo-height), calc(var(--kg-app-bar-height) - 16px));
   object-fit: contain;
   filter: drop-shadow(0 8px 18px rgba(0, 0, 0, 0.08));
 }
@@ -226,10 +227,12 @@ async function logoutAndGoHome(closeDrawer = false) {
 
 .nav-link {
   border-radius: 999px;
-  padding: 8px 16px;
-  min-height: 40px;
+  padding: 8px 18px;
+  min-height: 42px;
   color: rgba(var(--v-theme-on-surface), 0.9);
   font-weight: 600;
+  font-size: 1rem;
+  line-height: 1.2;
 }
 
 .active-nav {
@@ -294,8 +297,12 @@ async function logoutAndGoHome(closeDrawer = false) {
     min-width: 240px;
   }
 
+  .brand-link {
+    min-height: calc(var(--kg-logo-height-mobile) + 8px);
+  }
+
   .logo-img {
-    height: 52px;
+    height: min(var(--kg-logo-height-mobile), calc(var(--kg-app-bar-height) - 18px));
   }
 }
 

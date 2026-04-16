@@ -3,8 +3,8 @@ export const uiTheme = {
   logo: {
     src: '/assets/logo.png',
     alt: 'Kulinārijas Grāmata logo',
-    height: '72px',
-    mobileHeight: '52px',
+    height: '84px',
+    mobileHeight: '60px',
   },
   background: {
     image: '/assets/body.png',

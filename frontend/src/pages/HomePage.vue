@@ -72,7 +72,7 @@
               </div>
               <v-divider class="mb-1" />
 
-              <v-list v-if="topRecipes.length" lines="two" class="py-0">
+              <v-list v-if="topRecipes.length" lines="two" class="top-list py-0">
                 <v-list-item
                   v-for="(recipe, idx) in topRecipes"
                   :key="recipe.id"
@@ -111,7 +111,7 @@
               </div>
               <v-divider class="mb-1" />
 
-              <v-list v-if="topAuthors.length" lines="two" class="py-0">
+              <v-list v-if="topAuthors.length" lines="two" class="top-list py-0">
                 <v-list-item
                   v-for="(author, idx) in topAuthors"
                   :key="author.id"
@@ -400,6 +400,10 @@ onBeforeUnmount(() => {
   border: 1px solid rgba(0, 0, 0, 0.05);
   background: rgba(255, 255, 255, 0.58) !important;
   backdrop-filter: blur(10px);
+}
+
+.top-list {
+  background: transparent !important;
 }
 
 .top-lists {
