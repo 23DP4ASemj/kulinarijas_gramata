@@ -44,8 +44,17 @@ body::before {
   z-index: 1;
 }
 
+body.dark-theme {
+  background-color: #171513;
+  background-image: url('/assets/body.png');
+  background-size: contain;
+  background-repeat: repeat;
+  background-position: center top;
+  background-attachment: scroll;
+}
+
 body.dark-theme::before {
-  background: rgba(23, 21, 19, 0.18);
+  background: linear-gradient(180deg, rgba(23, 21, 19, 0.68), rgba(23, 21, 19, 0.56));
 }
 
 .v-btn,
