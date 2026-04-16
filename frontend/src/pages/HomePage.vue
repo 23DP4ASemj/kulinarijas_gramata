@@ -539,17 +539,23 @@ onBeforeUnmount(() => {
   padding-bottom: 8px;
 }
 
-:global(body.dark-theme) .hero-section {
+:global(body.dark-theme) section#ievads.hero-section.soft-section {
   background: transparent !important;
+  background-image: none !important;
   border: none !important;
   box-shadow: none !important;
   backdrop-filter: none !important;
 }
 
-:global(body.dark-theme) .hero-section h1,
-:global(body.dark-theme) .hero-section .text-subtitle-1,
-:global(body.dark-theme) .hero-section .text-medium-emphasis {
-  color: rgba(255, 248, 241, 0.96) !important;
+:global(body.dark-theme) section#ievads.hero-section.soft-section .hero-content h1,
+:global(body.dark-theme) section#ievads.hero-section.soft-section .hero-content .text-h3 {
+  color: #fff7ef !important;
+}
+
+:global(body.dark-theme) section#ievads.hero-section.soft-section .hero-content p,
+:global(body.dark-theme) section#ievads.hero-section.soft-section .hero-content .text-subtitle-1,
+:global(body.dark-theme) section#ievads.hero-section.soft-section .hero-content .text-medium-emphasis {
+  color: rgba(255, 245, 235, 0.82) !important;
 }
 
 :global(body.dark-theme) .latest-container,
@@ -560,7 +566,7 @@ onBeforeUnmount(() => {
 :global(body.dark-theme) .platform-card {
   background: rgba(24, 20, 18, 0.72) !important;
   border-color: rgba(255, 255, 255, 0.06) !important;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.18);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.18) !important;
 }
 
 @media (max-width: 960px) {
