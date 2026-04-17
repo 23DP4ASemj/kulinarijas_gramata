@@ -454,9 +454,11 @@ onBeforeUnmount(() => {
 :global(body.dark-theme) section#ievads.hero-section.soft-section {
   border-radius: 20px;
   padding: 44px;
-  border: 1px solid rgba(255, 255, 255, 0.05) !important;
-  background: rgba(22, 18, 16, 0.28) !important;
-  backdrop-filter: blur(6px) !important;
+  background:
+    linear-gradient(rgba(20, 16, 14, 0.35), rgba(20, 16, 14, 0.35)),
+    url('/body.png') center/cover no-repeat !important;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(6px);
   box-shadow: none !important;
 }
 
@@ -548,14 +550,8 @@ onBeforeUnmount(() => {
 }
 
 :global(body.dark-theme) section#ievads.hero-section.soft-section h1,
-:global(body.dark-theme) section#ievads.hero-section.soft-section .text-h3 {
-  color: #fff7ef !important;
-}
-
-:global(body.dark-theme) section#ievads.hero-section.soft-section p,
-:global(body.dark-theme) section#ievads.hero-section.soft-section .text-subtitle-1,
-:global(body.dark-theme) section#ievads.hero-section.soft-section .text-medium-emphasis {
-  color: rgba(255, 245, 235, 0.82) !important;
+:global(body.dark-theme) section#ievads.hero-section.soft-section p {
+  color: rgba(255, 248, 241, 0.95) !important;
 }
 
 @media (max-width: 960px) {
@@ -568,4 +564,3 @@ onBeforeUnmount(() => {
   }
 }
 </style>
-
