@@ -87,6 +87,10 @@ body.dark-theme::before {
 .soft-container {
   border-radius: 20px !important;
   padding: 24px;
+  background: rgba(var(--v-theme-surface), 0.82) !important;
+  border: 1px solid rgba(var(--v-theme-on-surface), 0.08);
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.04);
+  backdrop-filter: blur(10px);
 }
 
 .top-bar {
@@ -105,4 +109,5 @@ body.dark-theme .top-bar {
 .app-shell {
   position: relative;
   z-index: 1;
+  background: transparent !important;
 }

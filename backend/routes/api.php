@@ -9,6 +9,7 @@ use App\Http\Controllers\EmailVerificationController;
 use App\Http\Controllers\FavoriteController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\IngredientController;
+use App\Http\Controllers\NutritionController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\RecipeController;
 use App\Http\Controllers\RatingController;
@@ -32,6 +33,13 @@ Route::get('/blog-posts', [BlogPostController::class, 'index']);
 Route::get('/blog-posts/{blogPost}', [BlogPostController::class, 'show']);
 Route::get('/users/{id}', [UserController::class, 'show']);
 Route::get('/recipes/{recipe}/similar', [RecipeController::class, 'similar']);
+
+// Маршруты для расчета калорийности
+Route::prefix('nutrition')->group(function () {
+    Route::get('/search', [NutritionController::class, 'searchFood']);
+    Route::post('/calculate-ingredient', [NutritionController::class, 'calculateIngredient']);
+    Route::post('/calculate-recipe', [NutritionController::class, 'calculateRecipe']);
+});
 
 Route::apiResource('recipes', RecipeController::class)->only(['index', 'show']);
 Route::get('/recipes/{recipe}/comments', [CommentController::class, 'index']);

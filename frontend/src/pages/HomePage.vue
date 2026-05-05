@@ -447,19 +447,15 @@ onBeforeUnmount(() => {
 .hero-section {
   border-radius: 20px;
   padding: 44px;
-  border: 1px solid rgba(0, 0, 0, 0.05);
-  background: linear-gradient(135deg, rgba(253, 246, 238, 0.64), rgba(247, 233, 218, 0.5));
+  background-color: rgba(248, 246, 243, 0.2); 
+  border: 1px solid rgba(var(--v-theme-on-surface), 0.08);
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.04);
   backdrop-filter: blur(10px);
+
 }
-:global(body.dark-theme) section#ievads.hero-section.soft-section {
-  border-radius: 20px;
-  padding: 44px;
-  background:
-    linear-gradient(rgba(20, 16, 14, 0.35), rgba(20, 16, 14, 0.35)),
-    url('/body.png') center/cover no-repeat !important;
-  border: 1px solid rgba(255, 255, 255, 0.05);
-  backdrop-filter: blur(6px);
-  box-shadow: none !important;
+
+:global(body.dark-theme) .hero-section {
+  background-color: rgba(248, 246, 243, 0.2); 
 }
 
 .hero-content {
@@ -471,14 +467,21 @@ onBeforeUnmount(() => {
   border-radius: 999px;
 }
 
-.top-container {
-  background: rgba(255, 255, 255, 0.66);
+.top-container,
+.latest-container,
+.metric-card,
+.list-shell,
+.action-card,
+.platform-card {
+  background: rgba(var(--v-theme-surface), 0.82) !important;
+  border: 1px solid rgba(var(--v-theme-on-surface), 0.08);
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.04);
   backdrop-filter: blur(10px);
 }
 
+.top-container,
 .latest-container {
-  background: rgba(255, 255, 255, 0.66) !important;
-  backdrop-filter: blur(10px);
+  padding: 24px;
 }
 
 .latest-skeleton {
@@ -488,9 +491,6 @@ onBeforeUnmount(() => {
 .metric-card {
   padding: 20px;
   border-radius: 16px;
-  border: 1px solid rgba(0, 0, 0, 0.05);
-  background: rgba(255, 255, 255, 0.62) !important;
-  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.04);
 }
 
 .metric-value {
@@ -502,8 +502,8 @@ onBeforeUnmount(() => {
 .list-shell {
   padding: 10px;
   border-radius: 16px;
-  border: 1px solid rgba(0, 0, 0, 0.05);
-  background: rgba(255, 255, 255, 0.58) !important;
+  border: 1px solid rgba(var(--v-theme-on-surface), 0.08);
+  background: rgba(var(--v-theme-surface), 0.82) !important;
   backdrop-filter: blur(10px);
 }
 
@@ -533,8 +533,8 @@ onBeforeUnmount(() => {
 .platform-card {
   border-radius: 16px;
   padding: 24px;
-  background: rgba(255, 255, 255, 0.62);
-  border: 1px solid rgba(0, 0, 0, 0.05);
+  background: rgba(var(--v-theme-surface), 0.82);
+  border: 1px solid rgba(var(--v-theme-on-surface), 0.08);
   box-shadow: 0 8px 30px rgba(0, 0, 0, 0.04);
   backdrop-filter: blur(10px);
 }

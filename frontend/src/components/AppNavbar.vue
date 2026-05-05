@@ -237,6 +237,8 @@ async function logoutAndGoHome(closeDrawer = false) {
 
 .active-nav {
   background: #F2EEE9;
+  color: #3b2f24 !important;
+  font-weight: 700;
 }
 
 .nav-link:hover {
@@ -308,6 +310,7 @@ async function logoutAndGoHome(closeDrawer = false) {
 
 :deep(.v-theme--dark) .active-nav {
   background: rgba(255, 255, 255, 0.12);
+  color: rgba(255, 248, 241, 0.95) !important;
 }
 
 :deep(.v-theme--dark) .profile-pill,

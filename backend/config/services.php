@@ -1,5 +1,8 @@
 <?php
 
 return [
-    // No third-party services required for this project.
+    // USDA FoodData Central API
+    'usda' => [
+        'api_key' => env('USDA_API_KEY'),
+    ],
 ];
