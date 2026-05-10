@@ -161,10 +161,6 @@
           </v-col>
 
           <v-col cols="12">
-            <NutritionCalculator :ingredients="nutritionPreviewIngredients" />
-          </v-col>
-
-          <v-col cols="12">
             <div class="section-shell">
               <div class="d-flex flex-wrap align-center justify-space-between ga-3 mb-4">
                 <div>
@@ -243,7 +239,6 @@ import { useVuelidate } from '@vuelidate/core'
 import { required } from '@vuelidate/validators'
 import AlertMessage from '../components/AlertMessage.vue'
 import ImageSourceInput from '../components/ImageSourceInput.vue'
-import NutritionCalculator from '../components/NutritionCalculator.vue'
 import { useAuthStore } from '../stores/auth'
 import { useRecipeCategoriesStore } from '../stores/recipeCategories'
 import { useRecipesStore } from '../stores/recipes'
@@ -299,14 +294,6 @@ const categoryErrors = computed(() => {
   if (!v$.value.category_id.required) errors.push('Kategorija ir obligāta.')
   return errors
 })
-
-const nutritionPreviewIngredients = computed(() =>
-  form.ingredients.map((item) => ({
-    name: item.name,
-    amount: item.amount,
-    unit: item.unit || 'grammi',
-  }))
-)
 
 function createIngredient() {
   return { name: '', amount: '', unit: 'grammi', withAmount: false }

@@ -80,11 +80,6 @@
         <v-alert v-else type="info" variant="tonal">Sastāvdaļas šai receptei nav pievienotas.</v-alert>
       </v-card>
 
-      <NutritionCalculator
-        v-if="nutritionIngredients.length"
-        :ingredients="nutritionIngredients"
-      />
-
       <v-card rounded="xl" class="pa-6">
         <div class="d-flex align-center justify-space-between flex-wrap ga-2 mb-3">
           <h3 class="text-h6 mb-0">Pagatavošanas soļi</h3>
@@ -193,7 +188,6 @@ import AlertMessage from '../components/AlertMessage.vue'
 import CommentList from '../components/CommentList.vue'
 import FavoritesButton from '../components/FavoritesButton.vue'
 import Loader from '../components/Loader.vue'
-import NutritionCalculator from '../components/NutritionCalculator.vue'
 import StarsRating from '../components/StarsRating.vue'
 
 const route = useRoute()
@@ -215,15 +209,6 @@ const canEditRecipe = computed(() => {
   if (!authed.value || !recipe.value) return false
   return auth.isAdmin || Number(recipe.value.author?.id) === Number(auth.user?.id)
 })
-const nutritionIngredients = computed(() =>
-  (recipe.value?.ingredients || [])
-    .map((item) => ({
-      name: item.name,
-      amount: item.amount,
-      unit: item.unit || 'g',
-    }))
-    .filter((item) => item.name)
-)
 
 const commentForm = reactive({ text: '' })
 const completedSteps = ref([])
