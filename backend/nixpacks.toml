@@ -8,12 +8,11 @@ cmds = [
 
 [phases.build]
 cmds = [
-  "php artisan config:clear",
-  "php artisan cache:clear",
-  "php artisan route:clear",
-  "php artisan view:clear"
-  "php artisan optimize:clear"
-
+  "php artisan optimize:clear",
+  "rm -f bootstrap/cache/config.php",
+  "rm -f bootstrap/cache/routes-v7.php",
+  "rm -f bootstrap/cache/packages.php",
+  "rm -f bootstrap/cache/services.php"
 ]
 
 [start]
