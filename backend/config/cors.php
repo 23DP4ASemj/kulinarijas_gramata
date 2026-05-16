@@ -2,17 +2,11 @@
 
 return [
 
-    'paths' => [
-        'api/*',
-        'sanctum/csrf-cookie',
-        'storage/*',
-    ],
+    'paths' => ['*'],
 
     'allowed_methods' => ['*'],
 
-    'allowed_origins' => [
-        'https://kulinarijas-gramata.vercel.app',
-    ],
+    'allowed_origins' => ['*'],
 
     'allowed_origins_patterns' => [],
 
