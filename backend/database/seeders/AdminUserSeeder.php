@@ -9,14 +9,16 @@ use Illuminate\Support\Facades\Hash;
 class AdminUserSeeder extends Seeder
 {
     public function run(): void
-    {
-        $adminEmail = trim((string) env('ADMIN_EMAIL', 'admin@admin.lv'));
-        $adminPassword = (string) env('ADMIN_PASSWORD', '');
-        $adminName = (string) env('ADMIN_NAME', 'Administrators');
+{
+        User::updateOrCreate(
+            ['email' => 'test@test.test'],
+            [
+                'name' => 'Admin',
+                'password' => Hash::make('test111'),
+                'role' => 'admin',
+            ]
+        );
 
-        if ($adminEmail === '' || $adminPassword === '') {
-            return;
-        }
 
         User::updateOrCreate(
             ['email' => $adminEmail],
